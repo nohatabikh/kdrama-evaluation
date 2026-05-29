@@ -1,0 +1,227 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "react-datepicker/dist/react-datepicker.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Kdrama Tracker - Cinematic Color Palette
+   #16131F - Deep purple-black
+   #F0D9E4 - Soft pink cream
+   #C1A0AC - Dusty rose
+   #4A3F4B - Muted purple-gray
+   #806C79 - Mauve
+*/
+
+:root {
+  --background: #16131F;
+  --foreground: #F0D9E4;
+  --card: #1e1a28;
+  --card-foreground: #F0D9E4;
+  --popover: #1e1a28;
+  --popover-foreground: #F0D9E4;
+  --primary: #F0D9E4;
+  --primary-foreground: #16131F;
+  --secondary: #4A3F4B;
+  --secondary-foreground: #F0D9E4;
+  --muted: #4A3F4B;
+  --muted-foreground: #806C79;
+  --accent: #C1A0AC;
+  --accent-foreground: #16131F;
+  --destructive: #b04040;
+  --destructive-foreground: #F0D9E4;
+  --border: #3a3242;
+  --input: #3a3242;
+  --ring: #C1A0AC;
+  --chart-1: #C1A0AC;
+  --chart-2: #806C79;
+  --chart-3: #F0D9E4;
+  --chart-4: #4A3F4B;
+  --chart-5: #a08892;
+  --radius: 0.625rem;
+  --sidebar: #1e1a28;
+  --sidebar-foreground: #F0D9E4;
+  --sidebar-primary: #C1A0AC;
+  --sidebar-primary-foreground: #16131F;
+  --sidebar-accent: #4A3F4B;
+  --sidebar-accent-foreground: #F0D9E4;
+  --sidebar-border: #3a3242;
+  --sidebar-ring: #C1A0AC;
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "Geist Mono", monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    @apply bg-background text-foreground;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+/* React Datepicker theme */
+.react-datepicker {
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 0.9rem;
+  background: var(--card);
+  color: var(--foreground);
+  font-family: inherit;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__header {
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  background: var(--card);
+  padding: 0.85rem 0.75rem 0.5rem;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.react-datepicker__day-name {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+.react-datepicker__day {
+  color: var(--foreground);
+  border-radius: 0.5rem;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.react-datepicker__day:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--foreground);
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.react-datepicker__day--outside-month {
+  color: color-mix(in srgb, var(--muted-foreground) 45%, transparent);
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: var(--muted-foreground);
+}
+
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  border-color: var(--accent);
+}
+
+.react-datepicker__close-icon::after {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.kdrama-datepicker .react-datepicker__day.kdrama-datepicker-day {
+  background: transparent !important;
+  color: var(--foreground) !important;
+  border-radius: 0.5rem !important;
+}
+
+.kdrama-datepicker .react-datepicker__day.kdrama-datepicker-day:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent) !important;
+  color: var(--foreground) !important;
+}
+
+.kdrama-datepicker
+  .react-datepicker__day.kdrama-datepicker-day.react-datepicker__day--keyboard-selected:not(.kdrama-datepicker-day--selected) {
+  background: transparent !important;
+  color: var(--foreground) !important;
+}
+
+.kdrama-datepicker
+  .react-datepicker__day.kdrama-datepicker-day.react-datepicker__day--today:not(.kdrama-datepicker-day--selected) {
+  background: transparent !important;
+  color: var(--foreground) !important;
+}
+
+.kdrama-datepicker
+  .react-datepicker__day.kdrama-datepicker-day--selected,
+.kdrama-datepicker
+  .react-datepicker__day.kdrama-datepicker-day--selected:hover,
+.kdrama-datepicker
+  .react-datepicker__day.kdrama-datepicker-day--selected.react-datepicker__day--keyboard-selected {
+  background: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
