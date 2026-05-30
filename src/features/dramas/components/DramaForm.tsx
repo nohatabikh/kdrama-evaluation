@@ -196,11 +196,11 @@ function DramaForm({ initialDrama }: DramaFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-3xl border border-border/50 bg-card/50 p-6 shadow-xl shadow-black/10 backdrop-blur-sm md:p-8"
+      className="w-full max-w-full overflow-hidden rounded-3xl border border-border/50 bg-card/50 p-6 shadow-xl shadow-black/10 backdrop-blur-sm md:p-8"
     >
-      <div className="grid gap-5">
+      <div className="grid min-w-0 gap-5">
         {/* title */}
-        <div className="flex flex-col gap-1">
+        <div className="flex min-w-0 flex-col gap-1">
           <label
             htmlFor="title"
             className="block text-sm font-medium text-foreground"
@@ -213,14 +213,14 @@ function DramaForm({ initialDrama }: DramaFormProps) {
             type="text"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            className="h-11 rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
+            className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
           />
         </div>
 
         {/* status / episodes / date */}
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid min-w-0 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {/* status */}
-          <div className="flex flex-col gap-1">
+          <div className="flex min-w-0 flex-col gap-1">
             <label
               htmlFor="status"
               className="block text-sm font-medium text-foreground"
@@ -234,7 +234,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
             >
               <SelectTrigger
                 id="status"
-                className="w-full rounded-md border-border/50 bg-background/50 px-3 py-1 text-sm text-foreground data-[size=default]:h-11 focus:border-accent/60 focus:ring-accent/20"
+                className="w-full min-w-0 max-w-full rounded-md border-border/50 bg-background/50 px-3 py-1 text-sm text-foreground data-[size=default]:h-11 focus:border-accent/60 focus:ring-accent/20"
               >
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
@@ -269,7 +269,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
 
           {/* total episodes */}
           {showTotalEpisodesField && (
-            <div className="flex flex-col gap-1">
+            <div className="flex min-w-0 flex-col gap-1">
               <label
                 htmlFor="totalEpisodes"
                 className="block text-sm font-medium text-foreground"
@@ -284,14 +284,14 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 value={totalEpisodes}
                 onChange={(event) => setTotalEpisodes(event.target.value)}
                 placeholder="16"
-                className="h-11 rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
+                className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
               />
             </div>
           )}
 
           {/* current episode */}
           {showCurrentEpisodeField && (
-            <div className="flex flex-col gap-1">
+            <div className="flex min-w-0 flex-col gap-1">
               <label
                 htmlFor="currentEpisode"
                 className="block text-sm font-medium text-foreground"
@@ -310,14 +310,14 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                     ? "Episode you stopped at"
                     : "Episode you are on"
                 }
-                className="h-11 rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
+                className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
               />
             </div>
           )}
 
           {/* finishedAt */}
           {showFinishedAtField && (
-            <div className="flex flex-col gap-1">
+            <div className="flex min-w-0 flex-col gap-1">
               <label
                 htmlFor="finishedAt"
                 className="block text-sm font-medium text-foreground"
@@ -358,7 +358,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 placeholderText="Pick a date"
                 isClearable
                 wrapperClassName="w-full"
-                className="h-11 w-full rounded-md border border-border/50 bg-background/50 px-3 py-1 text-sm text-foreground outline-none placeholder:text-muted-foreground/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
+                className="h-11 w-full max-w-full rounded-md border border-border/50 bg-background/50 px-3 py-1 text-sm text-foreground outline-none placeholder:text-muted-foreground/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
               />
             </div>
           )}
@@ -366,7 +366,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
 
         {/* rating */}
         {showRatingField && (
-          <div className="flex flex-col gap-1">
+          <div className="flex min-w-0 flex-col gap-1">
             <label className="block text-sm font-medium text-foreground">
               Rating
             </label>
@@ -408,7 +408,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
 
         {/* review */}
         {showReviewField && (
-          <div className="flex flex-col gap-1">
+          <div className="flex min-w-0 flex-col gap-1">
             <label
               htmlFor="review"
               className="block text-sm font-medium text-foreground"
@@ -425,13 +425,13 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                   ? "Why did you drop this drama?"
                   : "Write your thoughts about this drama..."
               }
-              className="min-h-32 rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
+              className="no-scrollbar min-h-44 max-h-64 max-w-full resize-none overflow-y-auto rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20 sm:min-h-48 sm:max-h-80"
             />
           </div>
         )}
 
         {/* genres */}
-        <div className="flex flex-col gap-1">
+        <div className="flex min-w-0 flex-col gap-1">
           <label className="block text-sm font-medium text-foreground">
             Genres
           </label>
@@ -459,7 +459,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
         </div>
 
         {/* posterUrl */}
-        <div className="flex flex-col gap-1">
+        <div className="flex min-w-0 flex-col gap-1">
           <label
             htmlFor="posterUrl"
             className="block text-sm font-medium text-foreground"
@@ -473,7 +473,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
             value={posterUrl}
             onChange={(event) => setPosterUrl(event.target.value)}
             placeholder="https://example.com/poster.jpg"
-            className="h-11 rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
+            className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
           />
 
           {posterUrl.trim() && (
