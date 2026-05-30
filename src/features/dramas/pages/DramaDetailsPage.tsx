@@ -78,7 +78,7 @@ function DramaDetailsPage() {
           </div>
         </div>
 
-        <section className="relative overflow-hidden rounded-[2rem] border border-border bg-card shadow-2xl">
+        <section className="relative overflow-hidden rounded-4xl border border-border bg-card shadow-2xl">
           {drama.posterUrl && (
             <img
               src={drama.posterUrl}
@@ -88,7 +88,7 @@ function DramaDetailsPage() {
             />
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-r from-card via-card/95 to-background/80" />
+          <div className="absolute inset-0 bg-linear-to-r from-card via-card/95 to-background/80" />
 
           <div className="relative grid md:grid-cols-[420px_1fr]">
             <div className="relative overflow-hidden bg-background shadow-2xl">
@@ -96,14 +96,14 @@ function DramaDetailsPage() {
                 <img
                   src={drama.posterUrl}
                   alt={`${drama.title} poster`}
-                  className="h-full min-h-[460px] w-full object-cover"
+                  className="h-full min-h-115 w-full object-cover"
                 />
               ) : (
-                <div className="flex min-h-[460px] items-center justify-center px-6 text-center text-sm text-muted-foreground">
+                <div className="flex min-h-115 items-center justify-center px-6 text-center text-sm text-muted-foreground">
                   No poster added yet
                 </div>
               )}
-              <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-r from-transparent to-card md:block" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-linear-to-r from-transparent to-card md:block" />
             </div>
 
             <div className="min-w-0 flex flex-col justify-start p-6 pt-10 md:p-8 md:pt-16">
@@ -178,7 +178,7 @@ function DramaDetailsPage() {
                   {drama.review && (
                     <div className="rounded-xl border border-border/70 bg-background/40 p-5 shadow-xl backdrop-blur-md">
                       <div className="flex items-start gap-3">
-                        <Quote className="mt-0.5 h-5 w-5 flex-shrink-0 fill-accent text-accent" />
+                        <Quote className="mt-0.5 h-5 w-5 shrink-0 fill-accent text-accent" />
                         <div className="min-w-0">
                           <h3 className="mb-2 mt-0.5 text-sm text-accent/80">
                             Your Review
