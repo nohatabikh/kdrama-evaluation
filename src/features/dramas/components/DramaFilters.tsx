@@ -48,7 +48,7 @@ function DramaFilters({
           className="pl-11 pr-10 h-12 bg-card/50 border-border/50 focus:border-accent/50 focus:ring-accent/20 placeholder:text-muted-foreground/60"
         />
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
         {statusFilterOptions.map((option) => {
           const isActive = statusFilter === option.value;
 
@@ -57,7 +57,7 @@ function DramaFilters({
               key={option.value}
               type="button"
               onClick={() => onStatusChange(option.value)}
-              className={`rounded-md border px-4 py-1 text-sm font-medium transition-all duration-200 ${
+              className={`min-h-9 rounded-md border px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? "border-accent bg-accent text-accent-foreground shadow-sm shadow-accent/20"
                   : "border-border/50 bg-card/40 text-muted-foreground hover:border-accent/50 hover:text-foreground"

@@ -39,7 +39,7 @@ function DramaCard({ drama }: DramaCardProps) {
 
   return (
     <Link to={`/dramas/${drama.id}`} className="group block">
-      <Card className="cursor-pointer overflow-hidden border border-border/50 bg-card/50 ring-0 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-accent/5">
+      <Card className="cursor-pointer overflow-hidden border border-border/50 bg-card/50 ring-0 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/70 hover:shadow-xl hover:shadow-accent/10">
         {drama.posterUrl && (
           <div className="relative aspect-2/3 overflow-hidden">
             <img
@@ -50,7 +50,7 @@ function DramaCard({ drama }: DramaCardProps) {
 
             <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent opacity-60" />
 
-            <div className="absolute left-3 top-3">
+            <div className="absolute left-2 top-2 sm:left-3 sm:top-3">
               <Badge
                 variant="outline"
                 className="inline-flex items-center gap-1 border-accent/40 bg-background/70 text-xs font-medium text-accent backdrop-blur-md"
@@ -69,7 +69,7 @@ function DramaCard({ drama }: DramaCardProps) {
             </div>
 
             {drama.rating && (
-              <div className="absolute right-3 top-3 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-foreground backdrop-blur-md">
+              <div className="absolute right-2 top-2 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-foreground backdrop-blur-md sm:right-3 sm:top-3">
                 ★ {drama.rating}/5
               </div>
             )}
@@ -83,12 +83,14 @@ function DramaCard({ drama }: DramaCardProps) {
                   strokeWidth={1.5}
                   className="mx-auto mb-2 text-accent"
                 />
-                <p className="font-medium text-foreground">View Details</p>
+                <p className="text-sm font-medium text-foreground sm:text-base">
+                  View Details
+                </p>
               </div>
             </div>
           </div>
         )}
-        <CardContent className="p-4">
+        <CardContent className="p-3 sm:p-4">
           <h3 className="line-clamp-1 font-serif text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {drama.title}
           </h3>
