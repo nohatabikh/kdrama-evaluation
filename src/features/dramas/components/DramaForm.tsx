@@ -493,12 +493,25 @@ function DramaForm({ initialDrama }: DramaFormProps) {
           )}
         </div>
 
-        <Button
-          type="submit"
-          className="mt-2 h-11 rounded-md bg-accent text-accent-foreground transition-colors hover:bg-accent/90"
-        >
-          {initialDrama ? "Update Drama" : "Add Drama"}
-        </Button>
+        <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              navigate(initialDrama ? `/dramas/${initialDrama.id}` : "/");
+            }}
+            className="h-11 rounded-md border-border/70 bg-background/30 text-foreground transition-colors hover:border-accent/60 hover:bg-accent/10 hover:text-foreground sm:min-w-28"
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type="submit"
+            className="h-11 rounded-md bg-accent text-accent-foreground transition-colors hover:bg-accent/90 sm:min-w-32"
+          >
+            {initialDrama ? "Update Drama" : "Add Drama"}
+          </Button>
+        </div>
       </div>
     </form>
   );

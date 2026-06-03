@@ -63,14 +63,14 @@ function DramaListPage() {
       <div className="pointer-events-none absolute -right-35 top-80 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
       <div className="mx-auto max-w-6xl space-y-8">
-        <section className="mb-8 py-2 text-center md:py-6">
+        <section className="mb-12 py-8 text-center md:py-12">
           <h2 className="mb-4 text-balance font-serif text-3xl font-bold text-foreground sm:text-4xl lg:text-[2.75rem]">
-            Your Drama Journey
+            A Diary for Every Drama
           </h2>
 
           <p className="mx-auto max-w-4xl text-base leading-relaxed text-muted-foreground md:whitespace-nowrap md:text-lg">
-            Track, rate, and remember every emotional moment from your favorite
-            Korean dramas.
+            Collect the shows you have watched, the ones waiting for you, and
+            the stories you do not want to forget.
           </p>
         </section>
 

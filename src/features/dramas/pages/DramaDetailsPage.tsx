@@ -2,7 +2,7 @@ import { useAppSelector } from "../../../hooks/useAppSelector";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteDrama } from "../store/dramaSlice";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { Quote, Star } from "lucide-react";
+import { MoreHorizontal, Pencil, Quote, Star, Trash2 } from "lucide-react";
 
 function DramaDetailsPage() {
   const { id } = useParams();
@@ -15,7 +15,7 @@ function DramaDetailsPage() {
 
   if (!drama) {
     return (
-      <main className="min-h-screen bg-background px-5 py-10 text-foreground">
+      <main className="min-h-screen px-5 py-10 text-foreground">
         <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-8 text-center shadow-2xl">
           <p className="mb-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
             Not Found
@@ -50,35 +50,51 @@ function DramaDetailsPage() {
   const ratingStars = drama.rating ? Math.round(drama.rating / 2) : 0;
 
   return (
-    <main className="min-h-screen bg-background px-5 py-8 text-foreground">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <main className="relative min-h-screen overflow-hidden px-5 pb-8 pt-16 text-foreground">
+      <div className="pointer-events-none absolute left-[-120px] top-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-140px] top-72 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-6xl">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <Link
             to="/"
             className="inline-flex items-center rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition hover:border-accent hover:text-foreground"
           >
-            ← Back to collection
+            &larr; Back to collection
           </Link>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to={`/dramas/${drama.id}/edit`}
-              className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground shadow-lg shadow-accent/20 transition hover:bg-accent/90"
-            >
-              Edit Drama
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleDeleteDrama}
-              className="rounded-full border border-destructive/50 px-5 py-2 text-sm font-medium text-destructive-foreground transition hover:bg-destructive/20"
-            >
-              Delete
-            </button>
-          </div>
         </div>
 
         <section className="relative overflow-hidden rounded-4xl border border-border bg-card shadow-2xl">
+          <details className="group absolute right-4 top-4 z-30">
+            <summary
+              className="flex h-10 w-10 cursor-pointer list-none items-center justify-center text-foreground/80 transition hover:text-foreground [&::-webkit-details-marker]:hidden"
+              aria-label="Drama actions"
+            >
+              <MoreHorizontal className="h-7 w-7" />
+            </summary>
+
+            <div className="absolute right-0 top-9 min-w-40 overflow-hidden rounded-xl border border-border/70 bg-card/95 p-1.5 shadow-2xl shadow-black/25 backdrop-blur-xl">
+              <Link
+                to={`/dramas/${drama.id}/edit`}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-accent/10 hover:text-accent"
+              >
+                <Pencil className="h-4 w-4" />
+                Edit Drama
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleDeleteDrama}
+                className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-destructive-foreground transition hover:bg-destructive/15"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </button>
+            </div>
+          </details>
+
           {drama.posterUrl && (
             <img
               src={drama.posterUrl}
@@ -88,7 +104,7 @@ function DramaDetailsPage() {
             />
           )}
 
-          <div className="absolute inset-0 bg-linear-to-r from-card via-card/95 to-background/80" />
+          <div className="absolute inset-0 bg-linear-to-r from-card via-card/95 to-card/90" />
 
           <div className="relative grid md:grid-cols-[420px_1fr]">
             <div className="relative overflow-hidden bg-background shadow-2xl">
