@@ -1,4 +1,15 @@
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
+
+const mobilePetals = [
+  { x: "8vw", size: "26px", drift: "20vw", duration: "24s", delay: "-3.2s" },
+  { x: "20vw", size: "22px", drift: "-12vw", duration: "20s", delay: "-8.8s" },
+  { x: "34vw", size: "28px", drift: "16vw", duration: "22s", delay: "-14.9s" },
+  { x: "48vw", size: "20px", drift: "-18vw", duration: "18s", delay: "-6s" },
+  { x: "62vw", size: "25px", drift: "12vw", duration: "26s", delay: "-19.4s" },
+  { x: "76vw", size: "23px", drift: "-20vw", duration: "21s", delay: "-11.9s" },
+  { x: "88vw", size: "29px", drift: "10vw", duration: "23s", delay: "-1.4s" },
+  { x: "96vw", size: "19px", drift: "-24vw", duration: "19s", delay: "-15.7s" },
+];
 
 type Petal = {
   x: number;
@@ -20,12 +31,14 @@ function createPetal(
 ): Petal {
   return {
     x: Math.random() * width,
-    y: startAbove ? -40 - Math.random() * height * 0.32 : Math.random() * height,
-    size: 24 + Math.random() * 14,
-    speed: isMobile
-      ? 0.85 + Math.random() * 0.65
-      : 0.48 + Math.random() * 0.5,
-    drift: -0.24 + Math.random() * 0.48,
+    y: startAbove
+      ? -40 - Math.random() * height * 0.32
+      : Math.random() * height,
+    size: isMobile ? 16 + Math.random() * 9 : 24 + Math.random() * 14,
+    speed: isMobile ? 2.7 + Math.random() * 1.55 : 0.48 + Math.random() * 0.5,
+    drift: isMobile
+      ? -0.34 + Math.random() * 0.68
+      : -0.24 + Math.random() * 0.48,
     rotation: Math.random() * Math.PI * 2,
     rotationSpeed: -0.008 + Math.random() * 0.016,
     opacity: 0.42 + Math.random() * 0.32,
@@ -74,6 +87,22 @@ function removeGreenBackground(image: HTMLImageElement) {
   return buffer;
 }
 
+function createPetalSprite(image: HTMLImageElement) {
+  const source = removeGreenBackground(image);
+  const sprite = document.createElement("canvas");
+  const context = sprite.getContext("2d");
+
+  if (!context) {
+    return source;
+  }
+
+  sprite.width = 48;
+  sprite.height = 48;
+  context.drawImage(source, 0, 0, sprite.width, sprite.height);
+
+  return sprite;
+}
+
 function drawPetal(
   context: CanvasRenderingContext2D,
   petal: Petal,
@@ -86,7 +115,13 @@ function drawPetal(
 
   const drawWidth = petal.size;
   const drawHeight = petal.size;
-  context.drawImage(image, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
+  context.drawImage(
+    image,
+    -drawWidth / 2,
+    -drawHeight / 2,
+    drawWidth,
+    drawHeight,
+  );
   context.restore();
 }
 
@@ -104,6 +139,10 @@ function PetalOverlay() {
 
     const isMobile = window.matchMedia("(max-width: 639px)").matches;
 
+    if (isMobile) {
+      return;
+    }
+
     const canvas = canvasRef.current;
 
     if (!canvas) {
@@ -120,7 +159,6 @@ function PetalOverlay() {
     let height = window.innerHeight;
     let animationFrame = 0;
     let lastTime = performance.now();
-    let lastDrawTime = 0;
     let lastScrollY = window.scrollY;
     let scrollVelocity = 0;
     let petals: Petal[] = [];
@@ -136,7 +174,7 @@ function PetalOverlay() {
       canvas.style.height = `${height}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-      const targetCount = isMobile ? 3 : width < 1024 ? 10 : 14;
+      const targetCount = isMobile ? 7 : width < 1024 ? 10 : 14;
       petals = Array.from({ length: targetCount }, () =>
         createPetal(width, height, false, isMobile),
       );
@@ -149,12 +187,6 @@ function PetalOverlay() {
     };
 
     const animate = (time: number) => {
-      if (isMobile && time - lastDrawTime < 42) {
-        animationFrame = requestAnimationFrame(animate);
-        return;
-      }
-
-      lastDrawTime = time;
       const delta = Math.min((time - lastTime) / 16.67, 2);
       lastTime = time;
 
@@ -187,7 +219,7 @@ function PetalOverlay() {
     resize();
     const image = new Image();
     image.onload = () => {
-      petalImage = removeGreenBackground(image);
+      petalImage = createPetalSprite(image);
     };
     image.src = "/assets/sakura-petal-photo-key.png";
 
@@ -203,11 +235,33 @@ function PetalOverlay() {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-10"
-    />
+    <>
+      <div
+        aria-hidden="true"
+        className="mobile-petal-overlay pointer-events-none fixed inset-0 z-10 overflow-hidden sm:hidden"
+      >
+        {mobilePetals.map((petal, index) => (
+          <span
+            key={index}
+            className="mobile-petal"
+            style={
+              {
+                "--petal-x": petal.x,
+                "--petal-size": petal.size,
+                "--petal-drift": petal.drift,
+                "--petal-duration": petal.duration,
+                "--petal-delay": petal.delay,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </div>
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-10 hidden sm:block"
+      />
+    </>
   );
 }
 

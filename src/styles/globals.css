@@ -183,6 +183,38 @@
       opacity: 0;
     }
   }
+
+  .mobile-petal {
+    position: absolute;
+    top: -12vh;
+    left: var(--petal-x);
+    width: var(--petal-size);
+    height: var(--petal-size);
+    background-image: url("/assets/sakura-petal-mobile.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.7;
+    transform: translate3d(0, 0, 0) rotate(18deg);
+    animation: mobile-petal-fall var(--petal-duration) linear infinite;
+    animation-delay: var(--petal-delay);
+    will-change: transform;
+  }
+
+  @keyframes mobile-petal-fall {
+    0% {
+      transform: translate3d(0, -8vh, 0) rotate(0deg);
+    }
+
+    50% {
+      transform: translate3d(calc(var(--petal-drift) * 0.45), 44vh, 0)
+        rotate(175deg);
+    }
+
+    100% {
+      transform: translate3d(var(--petal-drift), 104vh, 0) rotate(340deg);
+    }
+  }
 }
 
 /* React Datepicker theme */

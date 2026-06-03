@@ -8,12 +8,12 @@ function AddDramaPage() {
       <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-3xl space-y-8">
-        <section className="text-center">
-          <h1 className="text-balance font-serif text-4xl font-bold text-foreground md:text-5xl">
+        <section className="mb-3 py-8 text-center md:py-12">
+          <h1 className="mb-4 text-balance font-serif text-3xl font-bold text-foreground sm:text-4xl lg:text-[2.75rem]">
             Add a New Drama
           </h1>
 
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+          <p className="mx-auto max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
             Save the dramas you want to watch, track your progress, and keep
             your thoughts in one place.
           </p>
