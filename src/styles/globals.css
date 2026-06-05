@@ -120,6 +120,10 @@
     @apply bg-background text-foreground;
   }
 
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
   #root {
     min-height: 100vh;
   }

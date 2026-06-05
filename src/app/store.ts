@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dramaReducer from "../features/dramas/store/dramaSlice";
+import authReducer from "../features/auth/store/authSlice";
 
 export const store = configureStore({
   reducer: {
     dramas: dramaReducer,
+    auth: authReducer,
   },
 });
 

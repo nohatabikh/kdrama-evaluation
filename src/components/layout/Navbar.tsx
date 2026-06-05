@@ -25,7 +25,7 @@ function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-background/55 backdrop-blur-2xl transition-shadow duration-200 supports-[backdrop-filter]:bg-background/40 ${
+      className={`sticky top-0 z-50 bg-background/55 backdrop-blur-2xl transition-shadow duration-200 supports-backdrop-filter:bg-background/40 ${
         isScrolled ? "shadow-lg shadow-black/10" : "shadow-none"
       }`}
     >

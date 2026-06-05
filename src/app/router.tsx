@@ -1,6 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
+import AuthLayout from "../components/layout/AuthLayout";
+
+import ProtectedRoute from "../features/auth/components/ProtectedRoute";
+import LoginPage from "../features/auth/pages/LoginPage";
+import SignupPage from "../features/auth/pages/SignupPage";
 
 import DramaListPage from "../features/dramas/pages/DramaListPage";
 import AddDramaPage from "../features/dramas/pages/AddDramaPage";
@@ -9,8 +14,24 @@ import EditDramaPage from "../features/dramas/pages/EditDramaPage";
 
 export const router = createBrowserRouter([
   {
-    element: <MainLayout />,
-
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/signup",
+        element: <SignupPage />,
+      },
+    ],
+  },
+  {
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "/",
