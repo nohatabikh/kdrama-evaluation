@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteDrama } from "../store/dramaSlice";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 import { MoreHorizontal, Pencil, Quote, Star, Trash2 } from "lucide-react";
+import { DropdownMenu } from "radix-ui";
 
 function DramaDetailsPage() {
   const { id } = useParams();
@@ -66,33 +67,44 @@ function DramaDetailsPage() {
         </div>
 
         <section className="relative overflow-hidden rounded-4xl border border-border bg-card shadow-2xl">
-          <details className="group absolute right-4 top-4 z-30">
-            <summary
-              className="flex h-10 w-10 cursor-pointer list-none items-center justify-center text-foreground/80 transition hover:text-foreground [&::-webkit-details-marker]:hidden"
-              aria-label="Drama actions"
+          <div className="absolute right-4 top-4 z-30 flex items-center gap-1">
+            <Link
+              to={`/dramas/${drama.id}/edit`}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-background/55 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+              aria-label="Edit drama"
             >
-              <MoreHorizontal className="h-7 w-7" />
-            </summary>
+              <Pencil className="size-4" aria-hidden="true" />
+              Edit
+            </Link>
 
-            <div className="absolute right-0 top-9 min-w-40 overflow-hidden rounded-xl border border-border/70 bg-card/95 p-1.5 shadow-2xl shadow-black/25 backdrop-blur-xl">
-              <Link
-                to={`/dramas/${drama.id}/edit`}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-accent/10 hover:text-accent"
-              >
-                <Pencil className="h-4 w-4" />
-                Edit Drama
-              </Link>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button
+                  type="button"
+                  className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-background/55 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 data-[state=open]:bg-background/55 data-[state=open]:text-accent"
+                  aria-label="More drama actions"
+                >
+                  <MoreHorizontal className="size-5" aria-hidden="true" />
+                </button>
+              </DropdownMenu.Trigger>
 
-              <button
-                type="button"
-                onClick={handleDeleteDrama}
-                className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-destructive-foreground transition hover:bg-destructive/15"
-              >
-                <Trash2 className="h-4 w-4" />
-                Delete
-              </button>
-            </div>
-          </details>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  align="end"
+                  sideOffset={8}
+                  className="z-[60] min-w-44 rounded-xl border border-border/80 bg-popover/95 p-1.5 text-popover-foreground shadow-xl shadow-black/30 backdrop-blur-xl data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+                >
+                  <DropdownMenu.Item
+                    onSelect={handleDeleteDrama}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-muted-foreground outline-none transition-colors focus:bg-destructive/10 focus:text-destructive"
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                    Delete drama
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          </div>
 
           {drama.posterUrl && (
             <img
