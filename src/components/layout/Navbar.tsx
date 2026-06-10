@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { logout } from "../../features/auth/store/authSlice";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useAppSelector } from "../../hooks/useAppSelector";
+import { clearUserDramas } from "../../features/dramas/store/dramaSlice";
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,6 +36,7 @@ function Navbar() {
     ].join(" ");
 
   const handleLogout = () => {
+    dispatch(clearUserDramas());
     dispatch(logout());
     navigate("/login", { replace: true });
   };
@@ -45,22 +47,21 @@ function Navbar() {
         isScrolled ? "shadow-lg shadow-black/10" : "shadow-none"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 py-3 sm:gap-5">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-5 sm:px-0">
         <NavLink
           to="/"
-          className="group flex min-w-0 items-center gap-1"
+          className="group flex min-w-0 items-center gap-2"
           aria-label="My Tracker home"
         >
           <img
-            src="/assets/sakura-logo-navbar.png"
+            src="/assets/cherry-blossom.svg"
             alt=""
-            className="size-6 shrink-0 object-contain opacity-80 saturate-75 brightness-90"
+            className="relative z-10 size-7 shrink-0 sm:size-8"
+            aria-hidden="true"
           />
-          <span className="hidden min-w-0 sm:block">
-            <span
-              className="brand-title-shimmer block truncate font-serif text-lg font-medium leading-tight text-primary"
-              data-text="Drama Diary"
-            >
+
+          <span className="relative hidden min-w-0 sm:-ml-5 sm:block">
+            <span className="block truncate font-serif text-xl font-semibold leading-tight tracking-tight text-foreground">
               Drama Diary
             </span>
           </span>
@@ -76,10 +77,7 @@ function Navbar() {
             </NavLink>
           </div>
 
-          <span
-            className="h-5 w-px bg-border/80"
-            aria-hidden="true"
-          />
+          <span className="h-5 w-px bg-border/80" aria-hidden="true" />
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
@@ -96,7 +94,7 @@ function Navbar() {
               <DropdownMenu.Content
                 align="end"
                 sideOffset={8}
-                className="z-[60] min-w-56 rounded-xl border border-border/80 bg-popover/95 p-1.5 text-popover-foreground shadow-xl shadow-black/30 backdrop-blur-xl data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+                className="z-60 min-w-56 rounded-xl border border-border/80 bg-popover/95 p-1.5 text-popover-foreground shadow-xl shadow-black/30 backdrop-blur-xl data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
               >
                 <div className="px-2.5 py-2">
                   <p className="truncate text-sm font-medium">{user?.name}</p>

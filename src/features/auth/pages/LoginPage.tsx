@@ -1,7 +1,14 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, LockKeyhole, Mail, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  Mail,
+  Sparkles,
+} from "lucide-react";
 
 import { login } from "../store/authSlice";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
@@ -12,6 +19,7 @@ function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -40,19 +48,17 @@ function LoginPage() {
       <div className="pointer-events-none absolute -left-24 -top-24 hidden h-72 w-72 rounded-full bg-accent/18 blur-3xl sm:block" />
       <div className="pointer-events-none absolute -bottom-28 right-8 hidden h-80 w-80 rounded-full bg-primary/10 blur-3xl sm:block" />
 
-      <div className="relative grid min-h-[620px] lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="relative grid min-h-155 lg:grid-cols-[0.95fr_1.05fr]">
         <aside className="hidden border-r border-border/50 bg-background/35 p-10 lg:flex lg:flex-col lg:justify-between">
           <div>
-            <Link to="/" className="inline-flex items-center gap-3">
+            <Link to="/" className="inline-flex items-center gap-2 -ml-4">
               <img
-                src="/assets/sakura-logo-navbar.png"
+                src="/assets/cherry-blossom.svg"
                 alt=""
-                className="h-10 w-10 object-contain opacity-85 saturate-75"
+                className="relative z-10 size-12 shrink-0"
+                aria-hidden="true"
               />
-              <span
-                className="brand-title-shimmer font-serif text-2xl font-semibold text-primary"
-                data-text="Drama Diary"
-              >
+              <span className="-ml-6 font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
                 Drama Diary
               </span>
             </Link>
@@ -75,7 +81,9 @@ function LoginPage() {
           </div>
 
           <div className="rounded-2xl border border-border/50 bg-card/55 p-5 shadow-lg shadow-black/10">
-            <p className="font-serif text-xl text-primary">Tonight&apos;s queue</p>
+            <p className="font-serif text-xl text-primary">
+              Tonight&apos;s queue
+            </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Keep your collection close, polished, and ready for the next
               episode.
@@ -86,13 +94,14 @@ function LoginPage() {
         <div className="flex items-center justify-center px-7 py-12 sm:px-8 lg:px-12">
           <div className="w-full max-w-md">
             <div className="mb-8 lg:hidden">
-              <Link to="/" className="mb-8 inline-flex items-center gap-1.5">
+              <Link to="/" className="mb-8 inline-flex items-center gap-2">
                 <img
-                  src="/assets/sakura-logo-navbar.png"
+                  src="/assets/cherry-blossom.svg"
                   alt=""
-                  className="h-9 w-9 object-contain opacity-85 saturate-75"
+                  className="relative z-10 size-11 shrink-0"
+                  aria-hidden="true"
                 />
-                <span className="font-serif text-2xl font-semibold text-primary">
+                <span className="-ml-6 font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
                   Drama Diary
                 </span>
               </Link>
@@ -155,13 +164,28 @@ function LoginPage() {
                   <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-accent" />
                   <input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Enter your password"
-                    className="h-12 w-full rounded-2xl border border-border/70 bg-background/50 pl-11 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    className="h-12 w-full rounded-2xl border border-border/70 bg-background/50 pl-11 pr-12 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((isVisible) => !isVisible)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    aria-pressed={showPassword}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </button>
                 </div>
               </div>
 

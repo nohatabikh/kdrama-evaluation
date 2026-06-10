@@ -137,56 +137,6 @@
     display: none;
   }
 
-  .brand-title-shimmer {
-    position: relative;
-  }
-
-  .brand-title-shimmer::after {
-    content: attr(data-text);
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      100deg,
-      transparent 0%,
-      transparent 25%,
-      #e6a7bd 42%,
-      #ffffff 52%,
-      #e6a7bd 62%,
-      transparent 78%,
-      transparent 100%
-    );
-    background-size: 300% 100%;
-    background-position: 140% 0;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .group:hover .brand-title-shimmer::after {
-    animation: brand-title-shimmer 1.8s ease-in-out;
-  }
-
-  @keyframes brand-title-shimmer {
-    0% {
-      background-position: 140% 0;
-      opacity: 0;
-    }
-
-    15% {
-      opacity: 1;
-    }
-
-    90% {
-      opacity: 1;
-    }
-
-    100% {
-      background-position: -60% 0;
-      opacity: 0;
-    }
-  }
 
   .mobile-petal {
     position: absolute;

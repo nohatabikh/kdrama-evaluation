@@ -4,6 +4,10 @@ import { deleteDrama } from "../store/dramaSlice";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 import { MoreHorizontal, Pencil, Quote, Star, Trash2 } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
+import {
+  DEFAULT_POSTER_URL,
+  handlePosterError,
+} from "../constants/drama.constants";
 
 function DramaDetailsPage() {
   const { id } = useParams();
@@ -48,7 +52,7 @@ function DramaDetailsPage() {
     navigate("/");
   };
 
-  const ratingStars = drama.rating ? Math.round(drama.rating / 2) : 0;
+  const ratingStars = Math.min(5, Math.max(0, Math.round(drama.rating ?? 0)));
 
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-8 pt-16 text-foreground">
@@ -92,7 +96,7 @@ function DramaDetailsPage() {
                 <DropdownMenu.Content
                   align="end"
                   sideOffset={8}
-                  className="z-[60] min-w-44 rounded-xl border border-border/80 bg-popover/95 p-1.5 text-popover-foreground shadow-xl shadow-black/30 backdrop-blur-xl data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+                  className="z-60 min-w-44 rounded-xl border border-border/80 bg-popover/95 p-1.5 text-popover-foreground shadow-xl shadow-black/30 backdrop-blur-xl data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
                 >
                   <DropdownMenu.Item
                     onSelect={handleDeleteDrama}
@@ -106,30 +110,24 @@ function DramaDetailsPage() {
             </DropdownMenu.Root>
           </div>
 
-          {drama.posterUrl && (
-            <img
-              src={drama.posterUrl}
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-44 hidden h-full w-full scale-110 object-cover opacity-20 blur-3xl md:block"
-            />
-          )}
+          <img
+            src={drama.posterUrl || DEFAULT_POSTER_URL}
+            onError={handlePosterError}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-44 hidden h-full w-full scale-110 object-cover opacity-20 blur-3xl md:block"
+          />
 
           <div className="absolute inset-0 bg-linear-to-r from-card via-card/95 to-card/90" />
 
           <div className="relative grid md:grid-cols-[420px_1fr]">
             <div className="relative overflow-hidden bg-background shadow-2xl">
-              {drama.posterUrl ? (
-                <img
-                  src={drama.posterUrl}
-                  alt={`${drama.title} poster`}
-                  className="h-full min-h-115 w-full object-cover"
-                />
-              ) : (
-                <div className="flex min-h-115 items-center justify-center px-6 text-center text-sm text-muted-foreground">
-                  No poster added yet
-                </div>
-              )}
+              <img
+                src={drama.posterUrl || DEFAULT_POSTER_URL}
+                onError={handlePosterError}
+                alt={`${drama.title} poster`}
+                className="h-full min-h-115 w-full object-cover"
+              />
               <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-linear-to-r from-transparent to-card md:block" />
             </div>
 
@@ -210,7 +208,7 @@ function DramaDetailsPage() {
                           <h3 className="mb-2 mt-0.5 text-sm text-accent/80">
                             Your Review
                           </h3>
-                          <p className="no-scrollbar max-h-48 overflow-y-auto break-all leading-relaxed text-foreground/90 italic md:max-h-56">
+                          <p className="no-scrollbar max-h-64 overflow-y-auto break-all leading-relaxed text-foreground/90 italic md:max-h-72">
                             {drama.review}
                           </p>
                         </div>
