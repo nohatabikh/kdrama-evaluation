@@ -17,6 +17,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DatePicker from "react-datepicker";
+import {
+  DEFAULT_POSTER_URL,
+  handlePosterError,
+} from "../constants/drama.constants";
 
 const genreOptions = [
   "Romance",
@@ -57,7 +61,11 @@ function DramaForm({ initialDrama }: DramaFormProps) {
   const [genresInput, setGenresInput] = useState(
     initialDrama?.genres.join(", ") ?? "",
   );
-  const [posterUrl, setPosterUrl] = useState(initialDrama?.posterUrl ?? "");
+  const [posterUrl, setPosterUrl] = useState(
+    initialDrama?.posterUrl === DEFAULT_POSTER_URL
+      ? ""
+      : (initialDrama?.posterUrl ?? ""),
+  );
   const [status, setStatus] = useState<DramaStatus>(
     initialDrama?.status ?? "plan-to-watch",
   );
@@ -117,15 +125,6 @@ function DramaForm({ initialDrama }: DramaFormProps) {
     const numericRating =
       showRatingField && rating ? Number(rating) : undefined;
 
-    if (
-      showRatingField &&
-      numericRating !== undefined &&
-      (numericRating < 1 || numericRating > 5)
-    ) {
-      alert("Rating must be between 1 and 5.");
-      return;
-    }
-
     const numericTotalEpisodes = totalEpisodes
       ? Number(totalEpisodes)
       : undefined;
@@ -134,17 +133,49 @@ function DramaForm({ initialDrama }: DramaFormProps) {
       ? Number(currentEpisode)
       : undefined;
 
-    if (numericTotalEpisodes !== undefined && numericTotalEpisodes < 1) {
-      alert("Total episodes must be at least 1.");
+    if (numericRating !== undefined && !Number.isFinite(numericRating)) {
+      alert("Rating must be a valid number.");
+      return;
+    }
+
+    if (
+      numericTotalEpisodes !== undefined &&
+      !Number.isFinite(numericTotalEpisodes)
+    ) {
+      alert("Total episodes must be a valid number.");
+      return;
+    }
+
+    if (
+      numericCurrentEpisode !== undefined &&
+      !Number.isFinite(numericCurrentEpisode)
+    ) {
+      alert("Current episode must be a valid number.");
+      return;
+    }
+
+    if (
+      numericRating !== undefined &&
+      (numericRating < 1 || numericRating > 5)
+    ) {
+      alert("Rating must be between 1 and 5.");
+      return;
+    }
+
+    if (
+      numericTotalEpisodes !== undefined &&
+      (!Number.isInteger(numericTotalEpisodes) || numericTotalEpisodes < 1)
+    ) {
+      alert("Total episodes must be a whole number of at least 1.");
       return;
     }
 
     if (
       showCurrentEpisodeField &&
       numericCurrentEpisode !== undefined &&
-      numericCurrentEpisode < 1
+      (!Number.isInteger(numericCurrentEpisode) || numericCurrentEpisode < 1)
     ) {
-      alert("Current episode must be at least 1.");
+      alert("Current episode must be a whole number of at least 1.");
       return;
     }
 
@@ -281,6 +312,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 id="totalEpisodes"
                 type="number"
                 min="1"
+                step="1"
                 value={totalEpisodes}
                 onChange={(event) => setTotalEpisodes(event.target.value)}
                 placeholder="16"
@@ -303,6 +335,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 id="currentEpisode"
                 type="number"
                 min="1"
+                step="1"
                 value={currentEpisode}
                 onChange={(event) => setCurrentEpisode(event.target.value)}
                 placeholder={
@@ -476,21 +509,20 @@ function DramaForm({ initialDrama }: DramaFormProps) {
             className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
           />
 
-          {posterUrl.trim() && (
-            <div className="pt-3">
-              <p className="mb-2 text-xs text-muted-foreground">
-                Poster preview
-              </p>
+          <div className="pt-3">
+            <p className="mb-2 text-xs text-muted-foreground">
+              Poster preview
+            </p>
 
-              <div className="w-36 overflow-hidden rounded-xl border border-border/50 bg-background/50">
-                <img
-                  src={posterUrl}
-                  alt="Poster preview"
-                  className="aspect-2/3 w-full object-cover"
-                />
-              </div>
+            <div className="w-36 overflow-hidden rounded-xl border border-border/50 bg-background/50">
+              <img
+                src={posterUrl.trim() || DEFAULT_POSTER_URL}
+                onError={handlePosterError}
+                alt="Poster preview"
+                className="aspect-2/3 w-full object-cover"
+              />
             </div>
-          )}
+          </div>
         </div>
 
         <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">

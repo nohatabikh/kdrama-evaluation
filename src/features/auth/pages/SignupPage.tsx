@@ -1,10 +1,30 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, LockKeyhole, Mail, Sparkles, User } from "lucide-react";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  Mail,
+  Sparkles,
+  User,
+} from "lucide-react";
 
 import { signup } from "../store/authSlice";
+import { isStrongPassword } from "../services/authService";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
+
+const passwordRequirements = [
+  { label: "At least 8 characters", test: (value: string) => value.length >= 8 },
+  { label: "One uppercase letter", test: (value: string) => /[A-Z]/.test(value) },
+  { label: "One lowercase letter", test: (value: string) => /[a-z]/.test(value) },
+  { label: "One number", test: (value: string) => /\d/.test(value) },
+  {
+    label: "One special character",
+    test: (value: string) => /[^A-Za-z0-9]/.test(value),
+  },
+] as const;
 
 function SignupPage() {
   const dispatch = useAppDispatch();
@@ -13,12 +33,38 @@ function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
+  const passwordStrength = passwordRequirements.filter((requirement) =>
+    requirement.test(password),
+  ).length;
+  const passwordStrengthLabel =
+    passwordStrength === 0
+      ? ""
+      : passwordStrength <= 2
+        ? "Weak"
+        : passwordStrength === 3
+          ? "Fair"
+          : passwordStrength === 4
+            ? "Good"
+            : "Strong";
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage("");
+
+    if (!isStrongPassword(password)) {
+      setErrorMessage("Password does not meet the security requirements.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
 
     try {
       dispatch(
@@ -45,16 +91,14 @@ function SignupPage() {
       <div className="relative grid min-h-165 lg:grid-cols-[0.95fr_1.05fr]">
         <aside className="hidden border-r border-border/50 bg-background/35 p-10 lg:flex lg:flex-col lg:justify-between">
           <div>
-            <Link to="/" className="inline-flex items-center gap-3">
+            <Link to="/" className="inline-flex items-center gap-2 -ml-4">
               <img
-                src="/assets/sakura-logo-navbar.png"
+                src="/assets/cherry-blossom.svg"
                 alt=""
-                className="h-10 w-10 object-contain opacity-85 saturate-75"
+                className="relative z-10 size-12 shrink-0"
+                aria-hidden="true"
               />
-              <span
-                className="brand-title-shimmer font-serif text-2xl font-semibold text-primary"
-                data-text="Drama Diary"
-              >
+              <span className="-ml-7 font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
                 Drama Diary
               </span>
             </Link>
@@ -90,13 +134,14 @@ function SignupPage() {
         <div className="flex items-center justify-center px-7 py-12 sm:px-8 lg:px-12">
           <div className="w-full max-w-md">
             <div className="mb-8 lg:hidden">
-              <Link to="/" className="mb-8 inline-flex items-center gap-1.5">
+              <Link to="/" className="mb-8 inline-flex items-center gap-2">
                 <img
-                  src="/assets/sakura-logo-navbar.png"
+                  src="/assets/cherry-blossom.svg"
                   alt=""
-                  className="h-9 w-9 object-contain opacity-85 saturate-75"
+                  className="relative z-10 size-11 shrink-0"
+                  aria-hidden="true"
                 />
-                <span className="font-serif text-2xl font-semibold text-primary">
+                <span className="-ml-6 font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
                   Drama Diary
                 </span>
               </Link>
@@ -181,13 +226,99 @@ function SignupPage() {
                   <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-accent" />
                   <input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Create a password"
-                    className="h-12 w-full rounded-2xl border border-border/70 bg-background/50 pl-11 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    className="h-12 w-full rounded-2xl border border-border/70 bg-background/50 pl-11 pr-12 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((isVisible) => !isVisible)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    aria-pressed={showPassword}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="flex flex-1 gap-1"
+                      role="progressbar"
+                      aria-label="Password strength"
+                      aria-valuemin={0}
+                      aria-valuemax={5}
+                      aria-valuenow={passwordStrength}
+                    >
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <span
+                          key={index}
+                          className={`h-1 flex-1 rounded-full transition-colors ${
+                            index < passwordStrength
+                              ? "bg-accent"
+                              : "bg-border/70"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="w-11 text-right text-xs text-accent">
+                      {passwordStrengthLabel}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    8+ characters with uppercase, lowercase, number, and symbol
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Confirm Password
+                </label>
+
+                <div className="relative">
+                  <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-accent" />
+                  <input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(event) => setConfirmPassword(event.target.value)}
+                    placeholder="Confirm your password"
+                    className="h-12 w-full rounded-2xl border border-border/70 bg-background/50 pl-11 pr-12 text-sm text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowConfirmPassword((isVisible) => !isVisible)
+                    }
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
+                    aria-pressed={showConfirmPassword}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </button>
                 </div>
               </div>
 

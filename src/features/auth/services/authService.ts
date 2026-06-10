@@ -20,62 +20,88 @@ const createUserId = () => {
   return `user-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 };
 
-export const signupUser = (formValues: SignupFormValues): AuthUser => {
-  const users = loadUsersFromStorage();
+export const isStrongPassword = (password: string) =>
+  password.length >= 8 &&
+  /[a-z]/.test(password) &&
+  /[A-Z]/.test(password) &&
+  /\d/.test(password) &&
+  /[^A-Za-z0-9]/.test(password);
 
-  const existingUser = users.find(
-    (user) => user.email.toLowerCase() === formValues.email.toLowerCase()
-  );
+ export const signupUser = (formValues: SignupFormValues): AuthUser => {
+    const name = formValues.name.trim();
+    const email = formValues.email.trim().toLowerCase();
 
-  if (existingUser) {
-    throw new Error("This email is already registered.");
-  }
+    if (name.length < 2) {
+      throw new Error("Name must contain at least 2 characters.");
+    }
 
-  const newUser = {
-    id: createUserId(),
-    name: formValues.name.trim(),
-    email: formValues.email.trim().toLowerCase(),
-    password: formValues.password,
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new Error("Enter a valid email address.");
+    }
+
+    if (!isStrongPassword(formValues.password)) {
+      throw new Error("Password does not meet the security requirements.");
+    }
+
+    const users = loadUsersFromStorage();
+
+    const existingUser = users.find((user) => user.email === email);
+
+    if (existingUser) {
+      throw new Error("This email is already registered.");
+    }
+
+    const newUser = {
+      id: createUserId(),
+      name,
+      email,
+      password: formValues.password,
+    };
+
+    const updatedUsers = [...users, newUser];
+
+    saveUsersToStorage(updatedUsers);
+
+    const authUser: AuthUser = {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+    };
+
+    saveAuthUserToStorage(authUser);
+
+    return authUser;
   };
 
-  const updatedUsers = [...users, newUser];
+ export const loginUser = (formValues: LoginFormValues): AuthUser => {
+    const email = formValues.email.trim().toLowerCase();
 
-  saveUsersToStorage(updatedUsers);
+    if (!email || !formValues.password) {
+      throw new Error("Email and password are required.");
+    }
 
-  const authUser: AuthUser = {
-    id: newUser.id,
-    name: newUser.name,
-    email: newUser.email,
+    const users = loadUsersFromStorage();
+
+    const existingUser = users.find(
+      (user) =>
+        user.email === email &&
+        user.password === formValues.password,
+    );
+
+    if (!existingUser) {
+      throw new Error("Invalid email or password.");
+    }
+
+    const authUser: AuthUser = {
+      id: existingUser.id,
+      name: existingUser.name,
+      email: existingUser.email,
+    };
+
+    saveAuthUserToStorage(authUser);
+
+    return authUser;
   };
-
-  saveAuthUserToStorage(authUser);
-
-  return authUser;
-};
-
-export const loginUser = (formValues: LoginFormValues): AuthUser => {
-  const users = loadUsersFromStorage();
-
-  const existingUser = users.find(
-    (user) =>
-      user.email.toLowerCase() === formValues.email.trim().toLowerCase() &&
-      user.password === formValues.password
-  );
-
-  if (!existingUser) {
-    throw new Error("Invalid email or password.");
-  }
-
-  const authUser: AuthUser = {
-    id: existingUser.id,
-    name: existingUser.name,
-    email: existingUser.email,
-  };
-
-  saveAuthUserToStorage(authUser);
-
-  return authUser;
-};
 
 export const logoutUser = () => {
   removeAuthUserFromStorage();

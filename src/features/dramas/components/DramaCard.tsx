@@ -4,15 +4,17 @@ import {
   Tick01Icon,
   Clock01Icon,
   ViewIcon,
-  PauseIcon,
   PlayIcon,
   Cancel01Icon,
 } from "@hugeicons/core-free-icons";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
 import type { Drama } from "../types/drama.types";
+import {
+  DEFAULT_POSTER_URL,
+  handlePosterError,
+} from "../constants/drama.constants";
 
 type DramaCardProps = {
   drama: Drama;
@@ -23,7 +25,6 @@ const statusIcons = {
   completed: Tick01Icon,
   "plan-to-watch": Clock01Icon,
   dropped: Cancel01Icon,
-  "on-hold": PauseIcon,
 } as const;
 
 function formatStatus(status: string) {
@@ -40,56 +41,53 @@ function DramaCard({ drama }: DramaCardProps) {
   return (
     <Link to={`/dramas/${drama.id}`} className="group block">
       <Card className="cursor-pointer overflow-hidden border border-border/50 bg-card/50 ring-0 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/70 hover:shadow-xl hover:shadow-accent/10">
-        {drama.posterUrl && (
-          <div className="relative aspect-2/3 overflow-hidden">
-            <img
-              src={drama.posterUrl}
-              alt={`${drama.title} poster`}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+        <div className="relative aspect-2/3 overflow-hidden">
+          <img
+            src={drama.posterUrl || DEFAULT_POSTER_URL}
+            onError={handlePosterError}
+            alt={`${drama.title} poster`}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent opacity-60" />
 
-            <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent opacity-60" />
+          <div className="absolute left-2 top-2 sm:left-3 sm:top-3">
+            <Badge
+              variant="outline"
+              className="inline-flex items-center gap-1 border-accent/40 bg-background/70 text-xs font-medium text-accent backdrop-blur-md"
+            >
+              <HugeiconsIcon
+                icon={StatusIcon}
+                size={12}
+                color="currentColor"
+                strokeWidth={2}
+                className="shrink-0"
+              />
+              <span className="leading-none">{formatStatus(drama.status)}</span>
+            </Badge>
+          </div>
 
-            <div className="absolute left-2 top-2 sm:left-3 sm:top-3">
-              <Badge
-                variant="outline"
-                className="inline-flex items-center gap-1 border-accent/40 bg-background/70 text-xs font-medium text-accent backdrop-blur-md"
-              >
-                <HugeiconsIcon
-                  icon={StatusIcon}
-                  size={12}
-                  color="currentColor"
-                  strokeWidth={2}
-                  className="shrink-0"
-                />
-                <span className="leading-none">
-                  {formatStatus(drama.status)}
-                </span>
-              </Badge>
+          {drama.rating && (
+            <div className="absolute right-2 top-2 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-foreground backdrop-blur-md sm:right-3 sm:top-3">
+              ★ {drama.rating}/5
             </div>
+          )}
 
-            {drama.rating && (
-              <div className="absolute right-2 top-2 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-foreground backdrop-blur-md sm:right-3 sm:top-3">
-                ★ {drama.rating}/5
-              </div>
-            )}
-
-            <div className="absolute inset-0 flex items-center justify-center bg-background/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <div className="p-4 text-center">
-                <HugeiconsIcon
-                  icon={ViewIcon}
-                  size={32}
-                  color="currentColor"
-                  strokeWidth={1.5}
-                  className="mx-auto mb-2 text-accent"
-                />
-                <p className="text-sm font-medium text-foreground sm:text-base">
-                  View Details
-                </p>
-              </div>
+          <div className="absolute inset-0 flex items-center justify-center bg-background/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className="p-4 text-center">
+              <HugeiconsIcon
+                icon={ViewIcon}
+                size={32}
+                color="currentColor"
+                strokeWidth={1.5}
+                className="mx-auto mb-2 text-accent"
+              />
+              <p className="text-sm font-medium text-foreground sm:text-base">
+                View Details
+              </p>
             </div>
           </div>
-        )}
+        </div>
+
         <CardContent className="p-3 sm:p-4">
           <h3 className="line-clamp-1 font-serif text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {drama.title}
