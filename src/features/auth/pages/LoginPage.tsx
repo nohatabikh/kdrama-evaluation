@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { login } from "../store/authSlice";
+import { login } from "../store/authThunks";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 
 function LoginPage() {

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { loadUserDramas } from "../../features/dramas/store/dramaSlice";
+import { loadDramasForUser } from "../../features/dramas/utils/dramaStorage";
 
 function MainLayout() {
   const dispatch = useAppDispatch();
@@ -12,7 +13,14 @@ function MainLayout() {
 
   useEffect(() => {
     if (userId) {
-      dispatch(loadUserDramas(userId));
+      const dramas = loadDramasForUser(userId);
+
+      dispatch(
+        loadUserDramas({
+          userId,
+          dramas,
+        }),
+      );
     }
   }, [dispatch, userId]);
 

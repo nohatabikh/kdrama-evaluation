@@ -54,6 +54,11 @@ function DramaDetailsPage() {
 
   const ratingStars = Math.min(5, Math.max(0, Math.round(drama.rating ?? 0)));
 
+  const showsRating =
+    drama.status === "completed" || drama.status === "dropped";
+
+  const showsFinishedDate = drama.status === "completed";
+
   return (
     <main className="relative min-h-screen overflow-hidden px-5 pb-8 pt-16 text-foreground">
       <div className="pointer-events-none absolute -left-30 top-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
@@ -167,7 +172,7 @@ function DramaDetailsPage() {
                   <p className="mb-1 text-xs uppercase tracking-[0.2em] text-muted-foreground">
                     Rating
                   </p>
-                  {drama.rating ? (
+                  {showsRating && drama.rating ? (
                     <div
                       className="mt-1.5 flex items-center gap-1 text-accent"
                       aria-label={`${ratingStars} out of 5 stars`}
@@ -193,7 +198,9 @@ function DramaDetailsPage() {
                     Finished
                   </p>
                   <p className="text-lg font-medium text-accent">
-                    {drama.finishedAt || "Not finished"}
+                    {showsFinishedDate && drama.finishedAt
+                      ? drama.finishedAt
+                      : "Not finished"}
                   </p>
                 </div>
               </div>
