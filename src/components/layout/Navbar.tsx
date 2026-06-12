@@ -3,7 +3,7 @@ import { DropdownMenu } from "radix-ui";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { logout } from "../../features/auth/store/authSlice";
+import { logout } from "../../features/auth/store/authThunks";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { clearUserDramas } from "../../features/dramas/store/dramaSlice";

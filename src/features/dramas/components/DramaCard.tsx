@@ -39,8 +39,8 @@ function DramaCard({ drama }: DramaCardProps) {
   const StatusIcon = statusIcons[statusKey] ?? Clock01Icon;
 
   return (
-    <Link to={`/dramas/${drama.id}`} className="group block">
-      <Card className="cursor-pointer overflow-hidden border border-border/50 bg-card/50 ring-0 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/70 hover:shadow-xl hover:shadow-accent/10">
+    <Link to={`/dramas/${drama.id}`} className="group block h-full">
+      <Card className="h-full cursor-pointer gap-0 overflow-hidden border border-border/50 bg-card/50 pb-0 ring-0 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-card/70 hover:shadow-xl hover:shadow-accent/10">
         <div className="relative aspect-2/3 overflow-hidden">
           <img
             src={drama.posterUrl || DEFAULT_POSTER_URL}
@@ -88,14 +88,14 @@ function DramaCard({ drama }: DramaCardProps) {
           </div>
         </div>
 
-        <CardContent className="p-3 sm:p-4">
+        <CardContent className="flex min-h-32 flex-col p-3 sm:min-h-36 sm:p-4">
           <h3 className="line-clamp-1 font-serif text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {drama.title}
           </h3>
 
-          {drama.genres.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {drama.genres.slice(0, 2).map((genre) => (
+          <div className="mt-2 flex min-h-5 flex-wrap gap-1.5">
+            {drama.genres.length > 0 &&
+              drama.genres.slice(0, 2).map((genre) => (
                 <Badge
                   key={genre}
                   variant="secondary"
@@ -104,17 +104,20 @@ function DramaCard({ drama }: DramaCardProps) {
                   {genre}
                 </Badge>
               ))}
-            </div>
-          )}
-          {drama.totalEpisodes && (
-            <p className="mt-3 text-xs text-muted-foreground">
-              {drama.status === "watching" && drama.currentEpisode
+          </div>
+
+          <p className="mt-3 min-h-4 text-xs text-muted-foreground">
+            {drama.totalEpisodes
+              ? drama.status === "watching" && drama.currentEpisode
                 ? `Episode ${drama.currentEpisode} of ${drama.totalEpisodes}`
-                : drama.status === "dropped" && drama.currentEpisode
-                  ? `Stopped at episode ${drama.currentEpisode} of ${drama.totalEpisodes}`
-                  : `${drama.totalEpisodes} episodes`}
-            </p>
-          )}
+                : drama.status === "completed"
+                  ? `Completed ${drama.currentEpisode ?? drama.totalEpisodes} of
+                  ${drama.totalEpisodes} episodes`
+                  : drama.status === "dropped" && drama.currentEpisode
+                    ? `Stopped at episode ${drama.currentEpisode} of ${drama.totalEpisodes}`
+                    : `${drama.totalEpisodes} episodes`
+              : "\u00A0"}
+          </p>
         </CardContent>
       </Card>
     </Link>

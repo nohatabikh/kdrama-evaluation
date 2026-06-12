@@ -21,6 +21,7 @@ import {
   DEFAULT_POSTER_URL,
   handlePosterError,
 } from "../constants/drama.constants";
+import { buildDrama } from "../utils/buildDrama";
 
 const genreOptions = [
   "Romance",
@@ -194,22 +195,22 @@ function DramaForm({ initialDrama }: DramaFormProps) {
       .map((genre) => genre.trim())
       .filter(Boolean);
 
-    const dramaData = {
+    const now = new Date().toISOString();
+
+    const dramaData = buildDrama({
+      initialDrama,
       id: initialDrama?.id ?? createDramaId(),
-      title: trimmedTitle,
-      posterUrl: posterUrl.trim() || undefined,
+      title,
+      posterUrl,
       genres,
       status,
-      totalEpisodes: showTotalEpisodesField ? numericTotalEpisodes : undefined,
-      currentEpisode: showCurrentEpisodeField
-        ? numericCurrentEpisode
-        : undefined,
-      rating: showRatingField ? numericRating : undefined,
-      review: showReviewField ? review.trim() || undefined : undefined,
-      finishedAt: showFinishedAtField ? finishedAt || undefined : undefined,
-      createdAt: initialDrama?.createdAt ?? new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+      totalEpisodes: numericTotalEpisodes,
+      currentEpisode: numericCurrentEpisode,
+      rating: numericRating,
+      review,
+      finishedAt,
+      updatedAt: now,
+    });
 
     if (initialDrama) {
       dispatch(updateDrama(dramaData));
@@ -510,9 +511,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
           />
 
           <div className="pt-3">
-            <p className="mb-2 text-xs text-muted-foreground">
-              Poster preview
-            </p>
+            <p className="mb-2 text-xs text-muted-foreground">Poster preview</p>
 
             <div className="w-36 overflow-hidden rounded-xl border border-border/50 bg-background/50">
               <img

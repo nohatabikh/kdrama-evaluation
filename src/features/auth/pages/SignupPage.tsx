@@ -11,7 +11,7 @@ import {
   User,
 } from "lucide-react";
 
-import { signup } from "../store/authSlice";
+import { signup } from "../store/authThunks";
 import { isStrongPassword } from "../services/authService";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 
