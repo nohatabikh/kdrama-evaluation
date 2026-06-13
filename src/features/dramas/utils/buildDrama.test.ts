@@ -31,7 +31,22 @@ const baseInput = {
 };
 
 describe("buildDrama", () => {
-  it("preserves completed data when changing to watching", () => {
+  it("removes completed-only data when changing to plan-to-watch", () => {
+    const result = buildDrama({
+      ...baseInput,
+      initialDrama: completedDrama,
+      status: "plan-to-watch",
+    });
+
+    expect(result.status).toBe("plan-to-watch");
+    expect(result.totalEpisodes).toBe(16);
+    expect(result.currentEpisode).toBeUndefined();
+    expect(result.rating).toBeUndefined();
+    expect(result.review).toBeUndefined();
+    expect(result.finishedAt).toBeUndefined();
+  });
+
+  it("removes evaluation data when changing to watching", () => {
     const result = buildDrama({
       ...baseInput,
       initialDrama: completedDrama,
@@ -41,9 +56,10 @@ describe("buildDrama", () => {
 
     expect(result.status).toBe("watching");
     expect(result.currentEpisode).toBe(4);
-    expect(result.rating).toBe(5);
-    expect(result.review).toBe("Excellent drama");
-    expect(result.finishedAt).toBe("2026-06-01");
+    expect(result.totalEpisodes).toBe(16);
+    expect(result.rating).toBeUndefined();
+    expect(result.review).toBeUndefined();
+    expect(result.finishedAt).toBeUndefined();
   });
 
   it("sets progress to the total episode count when completed", () => {
@@ -74,7 +90,7 @@ describe("buildDrama", () => {
     expect(result.finishedAt).toBe("2026-06-12");
   });
 
-  it("preserves rating and review when changing from completed to dropped", () => {
+  it("keeps dropped evaluation and progress but removes the finished date", () => {
     const result = buildDrama({
       ...baseInput,
       initialDrama: completedDrama,
@@ -86,7 +102,7 @@ describe("buildDrama", () => {
     expect(result.currentEpisode).toBe(10);
     expect(result.rating).toBe(5);
     expect(result.review).toBe("Excellent drama");
-    expect(result.finishedAt).toBe("2026-06-01");
+    expect(result.finishedAt).toBeUndefined();
   });
 
   it("does not add unrelated hidden values to a new planned drama", () => {

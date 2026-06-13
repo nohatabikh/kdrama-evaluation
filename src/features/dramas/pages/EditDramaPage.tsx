@@ -36,7 +36,7 @@ function EditDramaPage() {
       <div className="pointer-events-none absolute right-[-140px] top-72 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-3xl space-y-8">
+      <div className="relative z-10 mx-auto w-full min-w-0 max-w-3xl space-y-8">
         <div>
           <Link
             to={`/dramas/${drama.id}`}
@@ -46,12 +46,12 @@ function EditDramaPage() {
           </Link>
         </div>
 
-        <section className="text-center">
+        <section className="min-w-0 text-center">
           <p className="mb-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
             Update Entry
           </p>
 
-          <h1 className="text-balance font-serif text-4xl font-bold text-foreground md:text-5xl">
+          <h1 className="min-w-0 max-w-full [overflow-wrap:anywhere] text-balance font-serif text-4xl font-bold text-foreground md:text-5xl">
             Editing {drama.title}
           </h1>
 

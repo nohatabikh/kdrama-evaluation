@@ -1,20 +1,22 @@
-import { Link } from "react-router-dom";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Tick01Icon,
-  Clock01Icon,
-  ViewIcon,
-  PlayIcon,
   Cancel01Icon,
+  Clock01Icon,
+  PlayIcon,
+  StarIcon,
+  Tick01Icon,
+  ViewIcon,
 } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Link } from "react-router-dom";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Drama } from "../types/drama.types";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DEFAULT_POSTER_URL,
+  DRAMA_STATUS_LABELS,
   handlePosterError,
 } from "../constants/drama.constants";
+import type { Drama } from "../types/drama.types";
 
 type DramaCardProps = {
   drama: Drama;
@@ -27,16 +29,10 @@ const statusIcons = {
   dropped: Cancel01Icon,
 } as const;
 
-function formatStatus(status: string) {
-  return status
-    .split("-")
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
 function DramaCard({ drama }: DramaCardProps) {
-  const statusKey = drama.status.toLowerCase() as keyof typeof statusIcons;
-  const StatusIcon = statusIcons[statusKey] ?? Clock01Icon;
+  const StatusIcon = statusIcons[drama.status];
+  const showsRating =
+    drama.status === "completed" || drama.status === "dropped";
 
   return (
     <Link to={`/dramas/${drama.id}`} className="group block h-full">
@@ -50,10 +46,10 @@ function DramaCard({ drama }: DramaCardProps) {
           />
           <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent opacity-60" />
 
-          <div className="absolute left-2 top-2 sm:left-3 sm:top-3">
+          <div className="absolute inset-x-2 top-2 flex items-start justify-between gap-2 sm:inset-x-3 sm:top-3">
             <Badge
               variant="outline"
-              className="inline-flex items-center gap-1 border-accent/40 bg-background/70 text-xs font-medium text-accent backdrop-blur-md"
+              className="min-w-0 border-accent/40 bg-background/70 text-xs font-medium text-accent backdrop-blur-md"
             >
               <HugeiconsIcon
                 icon={StatusIcon}
@@ -62,15 +58,24 @@ function DramaCard({ drama }: DramaCardProps) {
                 strokeWidth={2}
                 className="shrink-0"
               />
-              <span className="leading-none">{formatStatus(drama.status)}</span>
+              <span className="truncate leading-none">
+                {DRAMA_STATUS_LABELS[drama.status]}
+              </span>
             </Badge>
-          </div>
 
-          {drama.rating && (
-            <div className="absolute right-2 top-2 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-foreground backdrop-blur-md sm:right-3 sm:top-3">
-              ★ {drama.rating}/5
-            </div>
-          )}
+            {showsRating && drama.rating && (
+              <div className="flex shrink-0 items-center gap-1 rounded-lg bg-background/80 px-2 py-1 text-xs font-medium text-foreground backdrop-blur-md">
+                <HugeiconsIcon
+                  icon={StarIcon}
+                  size={12}
+                  color="currentColor"
+                  strokeWidth={2}
+                  className="text-accent"
+                />
+                {drama.rating}/5
+              </div>
+            )}
+          </div>
 
           <div className="absolute inset-0 flex items-center justify-center bg-background/90 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <div className="p-4 text-center">
@@ -88,8 +93,8 @@ function DramaCard({ drama }: DramaCardProps) {
           </div>
         </div>
 
-        <CardContent className="flex min-h-32 flex-col p-3 sm:min-h-36 sm:p-4">
-          <h3 className="line-clamp-1 font-serif text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
+        <CardContent className="flex min-h-36 flex-col p-3 sm:p-4">
+          <h3 className="truncate font-serif text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {drama.title}
           </h3>
 
@@ -106,13 +111,12 @@ function DramaCard({ drama }: DramaCardProps) {
               ))}
           </div>
 
-          <p className="mt-3 min-h-4 text-xs text-muted-foreground">
+          <p className="mt-3 min-h-4 text-xs leading-5 text-muted-foreground">
             {drama.totalEpisodes
               ? drama.status === "watching" && drama.currentEpisode
                 ? `Episode ${drama.currentEpisode} of ${drama.totalEpisodes}`
                 : drama.status === "completed"
-                  ? `Completed ${drama.currentEpisode ?? drama.totalEpisodes} of
-                  ${drama.totalEpisodes} episodes`
+                  ? `Completed ${drama.currentEpisode ?? drama.totalEpisodes} of ${drama.totalEpisodes} episodes`
                   : drama.status === "dropped" && drama.currentEpisode
                     ? `Stopped at episode ${drama.currentEpisode} of ${drama.totalEpisodes}`
                     : `${drama.totalEpisodes} episodes`

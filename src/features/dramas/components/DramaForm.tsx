@@ -19,6 +19,7 @@ import {
 import DatePicker from "react-datepicker";
 import {
   DEFAULT_POSTER_URL,
+  DRAMA_STATUS_OPTIONS,
   handlePosterError,
 } from "../constants/drama.constants";
 import { buildDrama } from "../utils/buildDrama";
@@ -277,24 +278,15 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 align="start"
                 sideOffset={6}
               >
-                <SelectItem
-                  className="h-11 cursor-pointer"
-                  value="plan-to-watch"
-                >
-                  Plan to Watch
-                </SelectItem>
-
-                <SelectItem className="h-11 cursor-pointer" value="watching">
-                  Watching
-                </SelectItem>
-
-                <SelectItem className="h-11 cursor-pointer" value="completed">
-                  Completed
-                </SelectItem>
-
-                <SelectItem className="h-11 cursor-pointer" value="dropped">
-                  Dropped
-                </SelectItem>
+                {DRAMA_STATUS_OPTIONS.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    className="h-11 cursor-pointer"
+                    value={option.value}
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
