@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Eye,
@@ -12,10 +12,13 @@ import {
 
 import { login } from "../store/authThunks";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { getAuthDestination } from "../utils/authNavigation";
 
 function LoginPage() {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
+  const destination = getAuthDestination(location.state);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +38,7 @@ function LoginPage() {
         }),
       );
 
-      navigate("/");
+      navigate(destination, { replace: true });
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Something went wrong.",
@@ -129,6 +132,11 @@ function LoginPage() {
               </h2>
             </div>
 
+            <p className="mb-6 rounded-2xl border border-accent/25 bg-accent/10 px-4 py-3 text-sm leading-6 text-muted-foreground">
+              <span className="font-medium text-accent">Portfolio demo:</span>{" "}
+              use a fake password. Accounts are stored locally in this browser.
+            </p>
+
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
                 <label
@@ -208,6 +216,7 @@ function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 to="/signup"
+                state={location.state}
                 className="font-medium text-accent transition hover:text-primary"
               >
                 Sign up

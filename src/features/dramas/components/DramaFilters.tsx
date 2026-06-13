@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import type { StatusFilter } from "../types/drama.types";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Search01Icon } from "@hugeicons/core-free-icons";
+import { DRAMA_STATUS_OPTIONS } from "../constants/drama.constants";
 
 type DramaFiltersProps = {
   searchTerm: string;
@@ -13,10 +14,7 @@ type DramaFiltersProps = {
 
 const statusFilterOptions = [
   { label: "All", value: "all" },
-  { label: "Watching", value: "watching" },
-  { label: "Completed", value: "completed" },
-  { label: "Plan to Watch", value: "plan-to-watch" },
-  { label: "Dropped", value: "dropped" },
+  ...DRAMA_STATUS_OPTIONS,
 ] as const;
 
 function DramaFilters({
@@ -44,6 +42,7 @@ function DramaFilters({
           type="text"
           placeholder="Search your dramas..."
           value={searchTerm}
+          aria-label="Search dramas"
           onChange={(e) => onSearchTermChange(e.target.value)}
           className="pl-11 pr-10 h-12 bg-card/50 border-border/50 focus:border-accent/50 focus:ring-accent/20 placeholder:text-muted-foreground/60"
         />

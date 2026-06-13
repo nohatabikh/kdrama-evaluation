@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Eye,
@@ -14,6 +14,7 @@ import {
 import { signup } from "../store/authThunks";
 import { isStrongPassword } from "../services/authService";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { getAuthDestination } from "../utils/authNavigation";
 
 const passwordRequirements = [
   { label: "At least 8 characters", test: (value: string) => value.length >= 8 },
@@ -28,7 +29,9 @@ const passwordRequirements = [
 
 function SignupPage() {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
+  const destination = getAuthDestination(location.state);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -75,7 +78,7 @@ function SignupPage() {
         }),
       );
 
-      navigate("/");
+      navigate(destination, { replace: true });
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Something went wrong.",
@@ -168,6 +171,11 @@ function SignupPage() {
                 Start your collection
               </h2>
             </div>
+
+            <p className="mb-6 rounded-2xl border border-accent/25 bg-accent/10 px-4 py-3 text-sm leading-6 text-muted-foreground">
+              <span className="font-medium text-accent">Portfolio demo:</span>{" "}
+              use a fake password. Accounts are stored locally in this browser.
+            </p>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
@@ -341,6 +349,7 @@ function SignupPage() {
               Already have an account?{" "}
               <Link
                 to="/login"
+                state={location.state}
                 className="font-medium text-accent transition hover:text-primary"
               >
                 Log in

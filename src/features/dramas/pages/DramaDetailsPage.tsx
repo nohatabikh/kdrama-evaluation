@@ -6,6 +6,7 @@ import { MoreHorizontal, Pencil, Quote, Star, Trash2 } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import {
   DEFAULT_POSTER_URL,
+  DRAMA_STATUS_LABELS,
   handlePosterError,
 } from "../constants/drama.constants";
 
@@ -55,6 +56,9 @@ function DramaDetailsPage() {
   const ratingStars = Math.min(5, Math.max(0, Math.round(drama.rating ?? 0)));
 
   const showsRating =
+    drama.status === "completed" || drama.status === "dropped";
+
+  const showsReview =
     drama.status === "completed" || drama.status === "dropped";
 
   const showsFinishedDate = drama.status === "completed";
@@ -136,12 +140,12 @@ function DramaDetailsPage() {
               <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-linear-to-r from-transparent to-card md:block" />
             </div>
 
-            <div className="min-w-0 flex flex-col justify-start p-6 pt-10 md:p-8 md:pt-16">
+            <div className="flex min-w-0 flex-col justify-start p-6 pt-16 md:p-8 md:pt-16">
               <p className="mb-3 text-sm uppercase tracking-[0.35em] text-muted-foreground">
                 Drama Details
               </p>
 
-              <h1 className="mb-6 font-serif text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
+              <h1 className="mb-6 min-w-0 max-w-full [overflow-wrap:anywhere] font-serif text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
                 {drama.title}
               </h1>
 
@@ -164,7 +168,7 @@ function DramaDetailsPage() {
                     Status
                   </p>
                   <p className="text-lg font-medium text-accent">
-                    {drama.status}
+                    {DRAMA_STATUS_LABELS[drama.status]}
                   </p>
                 </div>
 
@@ -205,9 +209,9 @@ function DramaDetailsPage() {
                 </div>
               </div>
 
-              {(drama.review || drama.notes) && (
+              {((showsReview && drama.review) || drama.notes) && (
                 <div className="mt-8 grid gap-5">
-                  {drama.review && (
+                  {showsReview && drama.review && (
                     <div className="rounded-xl border border-border/70 bg-background/40 p-5 shadow-xl backdrop-blur-md">
                       <div className="flex items-start gap-3">
                         <Quote className="mt-0.5 h-5 w-5 shrink-0 fill-accent text-accent" />

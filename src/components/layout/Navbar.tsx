@@ -29,7 +29,7 @@ function Navbar() {
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
-      "text-sm font-medium transition-all duration-200 hover:text-accent hover:[text-shadow:0_0_16px_rgba(193,160,172,0.55)]",
+      "whitespace-nowrap text-sm font-medium transition-all duration-200 hover:text-accent hover:[text-shadow:0_0_16px_rgba(193,160,172,0.55)]",
       isActive
         ? "text-accent [text-shadow:0_0_14px_rgba(193,160,172,0.45)]"
         : "text-muted-foreground/70",
@@ -47,11 +47,11 @@ function Navbar() {
         isScrolled ? "shadow-lg shadow-black/10" : "shadow-none"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-5 sm:px-0">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-5 sm:px-6">
         <NavLink
           to="/"
           className="group flex min-w-0 items-center gap-2"
-          aria-label="My Tracker home"
+          aria-label="Drama Diary home"
         >
           <img
             src="/assets/cherry-blossom.svg"

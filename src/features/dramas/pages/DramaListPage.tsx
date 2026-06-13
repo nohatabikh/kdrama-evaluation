@@ -1,8 +1,10 @@
 import { useAppSelector } from "../../../hooks/useAppSelector";
 import DramaList from "../components/DramaList";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import type { StatusFilter } from "../types/drama.types";
 import DramaFilters from "../components/DramaFilters";
+import { DRAMA_STATUS_LABELS } from "../constants/drama.constants";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Cancel01Icon,
@@ -51,10 +53,26 @@ function DramaListPage() {
 
   const summaryCards = [
     { label: "Total", value: totalDramas, icon: Film01Icon },
-    { label: "Watching", value: watchingCount, icon: PlayIcon },
-    { label: "Completed", value: completedCount, icon: Tick01Icon },
-    { label: "Plan to Watch", value: planToWatchCount, icon: Clock01Icon },
-    { label: "Dropped", value: droppedCount, icon: Cancel01Icon },
+    {
+      label: DRAMA_STATUS_LABELS.watching,
+      value: watchingCount,
+      icon: PlayIcon,
+    },
+    {
+      label: DRAMA_STATUS_LABELS.completed,
+      value: completedCount,
+      icon: Tick01Icon,
+    },
+    {
+      label: DRAMA_STATUS_LABELS["plan-to-watch"],
+      value: planToWatchCount,
+      icon: Clock01Icon,
+    },
+    {
+      label: DRAMA_STATUS_LABELS.dropped,
+      value: droppedCount,
+      icon: Cancel01Icon,
+    },
   ];
 
   return (
@@ -120,6 +138,13 @@ function DramaListPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Add your first drama to start building your journal.
             </p>
+
+            <Link
+              to="/dramas/add"
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-lg shadow-accent/10 transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+            >
+              Add your first drama
+            </Link>
           </div>
         ) : filteredDramas.length === 0 ? (
           <div className="rounded-3xl border border-border/50  bg-card/70 p-10 text-center shadow-lg shadow-black/20 backdrop-blur-2xl">
