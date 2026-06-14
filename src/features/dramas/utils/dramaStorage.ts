@@ -89,52 +89,78 @@ const isOptionalIsoDate = (
 ): value is string | undefined =>
   value === undefined || isValidIsoDate(value);
 
-const isDramaArray = (value: unknown): value is Drama[] => {
-    return (
-      Array.isArray(value) &&
-      value.every(
-        (drama) =>
-          typeof drama === "object" &&
-          drama !== null &&
-          isNonEmptyString(drama.id) &&
-          isNonEmptyString(drama.title) &&
-          isStringArray(drama.genres) &&
-          isDramaStatus(drama.status) &&
-          isOptionalPositiveInteger(drama.totalEpisodes) &&
-          isOptionalPositiveInteger(drama.currentEpisode) &&
-          isOptionalRating(drama.rating) &&
-          !(
-            drama.currentEpisode !== undefined &&
-            drama.totalEpisodes !== undefined &&
-            drama.currentEpisode > drama.totalEpisodes
-          ) &&
-          isOptionalPosterUrl(drama.posterUrl) &&
-          isOptionalDateOnly(drama.startedAt) &&
-          isOptionalDateOnly(drama.finishedAt) &&
-          isOptionalString(drama.review) &&
-          isOptionalString(drama.notes) &&
-          isOptionalIsoDate(drama.updatedAt) &&
-          isValidIsoDate(drama.createdAt),
-      )
-    );
-  };
+const isDrama = (drama: unknown): drama is Drama => {
+  if (typeof drama !== "object" || drama === null) {
+    return false;
+  }
 
- const getDramasStorageKey = (userId: string) =>
-    `kdrama-tracker-dramas-${userId}`;
+  const record = drama as Record<string, unknown>;
+  const totalEpisodes = record.totalEpisodes;
+  const currentEpisode = record.currentEpisode;
 
- export const loadDramasForUser = (userId: string): Drama[] => {
-    const storedDramas = localStorage.getItem(getDramasStorageKey(userId));
-    const parsedDramas = safeParseJson<unknown>(storedDramas, []);
+  return (
+    isNonEmptyString(record.id) &&
+    isNonEmptyString(record.title) &&
+    isStringArray(record.genres) &&
+    isDramaStatus(record.status) &&
+    isOptionalPositiveInteger(totalEpisodes) &&
+    isOptionalPositiveInteger(currentEpisode) &&
+    isOptionalRating(record.rating) &&
+    !(
+      currentEpisode !== undefined &&
+      totalEpisodes !== undefined &&
+      currentEpisode > totalEpisodes
+    ) &&
+    isOptionalPosterUrl(record.posterUrl) &&
+    isOptionalDateOnly(record.finishedAt) &&
+    isOptionalString(record.review) &&
+    isOptionalIsoDate(record.updatedAt) &&
+    isValidIsoDate(record.createdAt)
+  );
+};
 
-    return isDramaArray(parsedDramas) ? parsedDramas : [];
-  };
+const normalizeDrama = (drama: Drama): Drama => ({
+  id: drama.id,
+  title: drama.title,
+  genres: drama.genres,
+  status: drama.status,
+  createdAt: drama.createdAt,
+  ...(drama.posterUrl !== undefined && { posterUrl: drama.posterUrl }),
+  ...(drama.finishedAt !== undefined && { finishedAt: drama.finishedAt }),
+  ...(drama.totalEpisodes !== undefined && {
+    totalEpisodes: drama.totalEpisodes,
+  }),
+  ...(drama.currentEpisode !== undefined && {
+    currentEpisode: drama.currentEpisode,
+  }),
+  ...(drama.rating !== undefined && { rating: drama.rating }),
+  ...(drama.review !== undefined && { review: drama.review }),
+  ...(drama.updatedAt !== undefined && { updatedAt: drama.updatedAt }),
+});
+
+const parseDramaArray = (value: unknown): Drama[] | null => {
+  return Array.isArray(value) && value.every(isDrama)
+    ? value.map(normalizeDrama)
+    : null;
+};
+
+const getDramasStorageKey = (userId: string) =>
+  `kdrama-tracker-dramas-${userId}`;
+
+export const loadDramasForUser = (userId: string): Drama[] => {
+  const storedDramas = localStorage.getItem(getDramasStorageKey(userId));
+  const parsedDramas = safeParseJson<unknown>(storedDramas, []);
+  const dramas = parseDramaArray(parsedDramas);
+
+  return dramas ?? [];
+};
 
 export const saveDramasForUser = (
-    userId: string,
-    dramas: Drama[],
-  ): void => {
-    localStorage.setItem(
-      getDramasStorageKey(userId),
-      JSON.stringify(dramas),
-    );
- };
+  userId: string,
+  dramas: Drama[],
+): void => {
+  localStorage.setItem(
+    getDramasStorageKey(userId),
+    JSON.stringify(dramas),
+  );
+};

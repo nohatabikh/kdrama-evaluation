@@ -16,7 +16,6 @@ export type Drama = {
 
   // Watching progress
   status: DramaStatus;
-  startedAt?: string;
   finishedAt?: string;
   totalEpisodes?: number;
   currentEpisode?: number;
@@ -24,7 +23,6 @@ export type Drama = {
   // Personal evaluation
   rating?: number;
   review?: string;
-  notes?: string;
 
   // System fields
   createdAt: string;
