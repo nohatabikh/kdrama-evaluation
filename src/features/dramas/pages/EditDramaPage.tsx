@@ -5,9 +5,28 @@ import DramaForm from "../components/DramaForm";
 function EditDramaPage() {
   const { id } = useParams();
 
-  const drama = useAppSelector((state) =>
-    state.dramas.items.find((drama) => drama.id === id),
-  );
+  const { drama, isHydrated } = useAppSelector((state) => ({
+    drama: state.dramas.items.find((drama) => drama.id === id),
+    isHydrated:
+      state.dramas.hydrationStatus === "loaded" &&
+      state.dramas.userId === state.auth.user?.id,
+  }));
+
+  if (!isHydrated) {
+    return (
+      <main className="flex min-h-screen items-center justify-center px-5 py-10 text-foreground">
+        <div className="text-center" role="status">
+          <div
+            className="mx-auto mb-4 size-8 animate-spin rounded-full border-2 border-border border-t-accent"
+            aria-hidden="true"
+          />
+          <p className="text-sm text-muted-foreground">
+            Loading drama entry...
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   if (!drama) {
     return (

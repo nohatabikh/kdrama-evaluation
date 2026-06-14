@@ -15,7 +15,12 @@ import {
 } from "@hugeicons/core-free-icons";
 
 function DramaListPage() {
-  const dramas = useAppSelector((state) => state.dramas.items);
+  const { dramas, isHydrated } = useAppSelector((state) => ({
+    dramas: state.dramas.items,
+    isHydrated:
+      state.dramas.hydrationStatus === "loaded" &&
+      state.dramas.userId === state.auth.user?.id,
+  }));
 
   const [searchTerm, setSearchTerm] = useState("");
   const normalizedSearchTerm = searchTerm.trim().toLowerCase();
@@ -74,6 +79,31 @@ function DramaListPage() {
       icon: Cancel01Icon,
     },
   ];
+
+  if (!isHydrated) {
+    return (
+      <main className="relative min-h-screen overflow-hidden px-4 py-8">
+        <div className="pointer-events-none absolute -left-30 top-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-35 top-80 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
+
+        <div className="mx-auto mt-24 max-w-6xl">
+          <div
+            className="rounded-3xl border border-border/50 bg-card/40 p-10 text-center backdrop-blur-sm"
+            role="status"
+          >
+            <div
+              className="mx-auto mb-4 size-8 animate-spin rounded-full border-2 border-border border-t-accent"
+              aria-hidden="true"
+            />
+            <p className="text-sm text-muted-foreground">
+              Loading your drama collection...
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden px-4 py-8">

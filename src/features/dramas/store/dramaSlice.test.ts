@@ -6,6 +6,7 @@ import dramaReducer, {
   clearUserDramas,
   deleteDrama,
   loadUserDramas,
+  startUserDramasHydration,
   updateDrama,
 } from "./dramaSlice";
 
@@ -31,6 +32,28 @@ describe("dramaSlice", () => {
 
     expect(state.userId).toBe("user-a");
     expect(state.items).toEqual([drama]);
+    expect(state.hydrationStatus).toBe("loaded");
+  });
+
+  it("clears stale items while a different user's dramas hydrate", () => {
+    const loadedState = dramaReducer(
+      undefined,
+      loadUserDramas({
+        userId: "user-a",
+        dramas: [drama],
+      }),
+    );
+
+    const loadingState = dramaReducer(
+      loadedState,
+      startUserDramasHydration("user-b"),
+    );
+
+    expect(loadingState).toEqual({
+      items: [],
+      userId: "user-b",
+      hydrationStatus: "loading",
+    });
   });
 
   it("adds, updates, and deletes dramas", () => {
@@ -70,6 +93,10 @@ describe("dramaSlice", () => {
 
     const clearedState = dramaReducer(loadedState, clearUserDramas());
 
-    expect(clearedState).toEqual({ items: [], userId: null });
+    expect(clearedState).toEqual({
+      items: [],
+      userId: null,
+      hydrationStatus: "idle",
+    });
   });
 });
