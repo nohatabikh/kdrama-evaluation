@@ -164,7 +164,7 @@ function DramaDetailsPage() {
                 Drama Details
               </p>
 
-              <h1 className="mb-6 min-w-0 max-w-full [overflow-wrap:anywhere] font-serif text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
+              <h1 className="mb-6 min-w-0 max-w-full wrap-anywhere font-serif text-3xl font-semibold tracking-tight text-foreground md:text-5xl">
                 {drama.title}
               </h1>
 
