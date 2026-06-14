@@ -2,7 +2,7 @@ import DramaForm from "../components/DramaForm";
 
 function AddDramaPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 py-8">
+    <div className="relative min-h-screen overflow-hidden px-4 py-8">
       <div className="pointer-events-none absolute left-[-120px] top-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
       <div className="pointer-events-none absolute right-[-140px] top-72 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
@@ -21,7 +21,7 @@ function AddDramaPage() {
 
         <DramaForm />
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -15,13 +15,32 @@ function DramaDetailsPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const drama = useAppSelector((state) =>
-    state.dramas.items.find((drama) => drama.id === id),
-  );
+  const { drama, isHydrated } = useAppSelector((state) => ({
+    drama: state.dramas.items.find((drama) => drama.id === id),
+    isHydrated:
+      state.dramas.hydrationStatus === "loaded" &&
+      state.dramas.userId === state.auth.user?.id,
+  }));
+
+  if (!isHydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-5 py-10 text-foreground">
+        <div className="text-center" role="status">
+          <div
+            className="mx-auto mb-4 size-8 animate-spin rounded-full border-2 border-border border-t-accent"
+            aria-hidden="true"
+          />
+          <p className="text-sm text-muted-foreground">
+            Loading drama details...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!drama) {
     return (
-      <main className="min-h-screen px-5 py-10 text-foreground">
+      <div className="min-h-screen px-5 py-10 text-foreground">
         <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-8 text-center shadow-2xl">
           <p className="mb-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
             Not Found
@@ -36,7 +55,7 @@ function DramaDetailsPage() {
             Back to collection
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
@@ -64,7 +83,7 @@ function DramaDetailsPage() {
   const showsFinishedDate = drama.status === "completed";
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-5 pb-8 pt-16 text-foreground">
+    <div className="relative min-h-screen overflow-hidden px-5 pb-8 pt-16 text-foreground">
       <div className="pointer-events-none absolute -left-30 top-24 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-35 top-72 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-20 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
@@ -230,7 +249,7 @@ function DramaDetailsPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

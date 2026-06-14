@@ -14,7 +14,7 @@ import {
 import { signup } from "../store/authThunks";
 import { isStrongPassword } from "../services/authService";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { getAuthDestination } from "../utils/authNavigation";
+import { consumeAuthDestination } from "../utils/authNavigation";
 
 const passwordRequirements = [
   { label: "At least 8 characters", test: (value: string) => value.length >= 8 },
@@ -31,7 +31,6 @@ function SignupPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const destination = getAuthDestination(location.state);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -78,6 +77,7 @@ function SignupPage() {
         }),
       );
 
+      const destination = consumeAuthDestination(location.state);
       navigate(destination, { replace: true });
     } catch (error) {
       setErrorMessage(
