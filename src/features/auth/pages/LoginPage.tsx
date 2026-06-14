@@ -12,13 +12,12 @@ import {
 
 import { login } from "../store/authThunks";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { getAuthDestination } from "../utils/authNavigation";
+import { consumeAuthDestination } from "../utils/authNavigation";
 
 function LoginPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const destination = getAuthDestination(location.state);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +37,7 @@ function LoginPage() {
         }),
       );
 
+      const destination = consumeAuthDestination(location.state);
       navigate(destination, { replace: true });
     } catch (error) {
       setErrorMessage(

@@ -11,7 +11,12 @@ import {
 import { describe, expect, it } from "vitest";
 
 import authReducer, { setAuthUser } from "../store/authSlice";
-import { getAuthDestination } from "../utils/authNavigation";
+import {
+  consumeAuthDestination,
+  getAuthDestination,
+  markExplicitLogout,
+  shouldPreserveProtectedDestination,
+} from "../utils/authNavigation";
 import GuestRoute from "./GuestRoute";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -47,6 +52,12 @@ function LoginDestination() {
   const location = useLocation();
 
   return <p>Destination: {getAuthDestination(location.state)}</p>;
+}
+
+function LoginRouteState() {
+  const location = useLocation();
+
+  return <p>{location.state ? "Has destination" : "No destination"}</p>;
 }
 
 describe("authentication route guards", () => {
@@ -104,5 +115,59 @@ describe("authentication route guards", () => {
         },
       }),
     ).toBe("/");
+  });
+
+  it("clears the intended destination after an explicit logout", () => {
+    const routeState = {
+      from: {
+        pathname: "/dramas/user-a-drama",
+      },
+    };
+
+    markExplicitLogout("/dramas/user-a-drama");
+
+    expect(
+      shouldPreserveProtectedDestination("/dramas/user-a-drama"),
+    ).toBe(false);
+    expect(getAuthDestination(routeState)).toBe("/");
+    expect(consumeAuthDestination(routeState)).toBe("/");
+    expect(getAuthDestination(routeState)).toBe("/dramas/user-a-drama");
+  });
+
+  it("preserves a protected URL intentionally opened after logout", () => {
+    markExplicitLogout("/dramas/user-a-drama");
+
+    const routeState = {
+      from: {
+        pathname: "/dramas/add",
+      },
+    };
+
+    expect(shouldPreserveProtectedDestination("/dramas/add")).toBe(true);
+    expect(consumeAuthDestination(routeState)).toBe("/dramas/add");
+    expect(getAuthDestination(routeState)).toBe("/dramas/add");
+  });
+
+  it("does not rebuild the logged-out drama URL as route state", () => {
+    markExplicitLogout("/dramas/user-a-drama");
+
+    renderWithAuth(
+      <MemoryRouter initialEntries={["/dramas/user-a-drama"]}>
+        <Routes>
+          <Route path="/login" element={<LoginRouteState />} />
+          <Route
+            path="/dramas/:id"
+            element={
+              <ProtectedRoute>
+                <p>Drama details</p>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+      false,
+    );
+
+    expect(screen.getByText("No destination")).toBeInTheDocument();
   });
 });

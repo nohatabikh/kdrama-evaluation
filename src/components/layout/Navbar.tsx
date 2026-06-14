@@ -1,17 +1,19 @@
 import { LogOut, UserRound } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { logout } from "../../features/auth/store/authThunks";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { clearUserDramas } from "../../features/dramas/store/dramaSlice";
+import { markExplicitLogout } from "../../features/auth/utils/authNavigation";
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useAppSelector((state) => state.auth.user);
 
   const firstName = user?.name.trim().split(/\s+/)[0] || "there";
@@ -36,6 +38,9 @@ function Navbar() {
     ].join(" ");
 
   const handleLogout = () => {
+    markExplicitLogout(
+      `${location.pathname}${location.search}${location.hash}`,
+    );
     dispatch(clearUserDramas());
     dispatch(logout());
     navigate("/login", { replace: true });
