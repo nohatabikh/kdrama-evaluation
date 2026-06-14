@@ -47,7 +47,7 @@ function Navbar() {
         isScrolled ? "shadow-lg shadow-black/10" : "shadow-none"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-5 sm:px-6">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-5 sm:px-0 ">
         <NavLink
           to="/"
           className="group flex min-w-0 items-center gap-2"

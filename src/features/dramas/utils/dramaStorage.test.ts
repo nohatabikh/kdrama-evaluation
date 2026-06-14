@@ -74,10 +74,8 @@ describe("dramaStorage", () => {
 
   it.each([
     ["posterUrl", 123],
-    ["startedAt", false],
     ["finishedAt", {}],
     ["review", ["not", "text"]],
-    ["notes", 123],
     ["updatedAt", null],
   ])("rejects a non-string %s value", (field, value) => {
     localStorage.setItem(
@@ -120,8 +118,6 @@ describe("dramaStorage", () => {
   });
 
   it.each([
-    ["invalid started date format", { startedAt: "June 1, 2026" }],
-    ["impossible started date", { startedAt: "2026-02-30" }],
     ["invalid finished date format", { finishedAt: "2026/06/12" }],
     ["impossible finished date", { finishedAt: "2026-13-01" }],
     ["invalid created timestamp", { createdAt: "not-a-date" }],
@@ -178,5 +174,20 @@ describe("dramaStorage", () => {
     );
 
     expect(loadDramasForUser("user-a")).toEqual([dramaWithPoster]);
+  });
+
+  it("ignores removed fields in legacy stored drama records", () => {
+    localStorage.setItem(
+      "kdrama-tracker-dramas-user-a",
+      JSON.stringify([
+        {
+          ...drama,
+          startedAt: "2026-05-01",
+          notes: "Legacy notes",
+        },
+      ]),
+    );
+
+    expect(loadDramasForUser("user-a")).toEqual([drama]);
   });
 });

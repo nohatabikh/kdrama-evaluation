@@ -209,35 +209,21 @@ function DramaDetailsPage() {
                 </div>
               </div>
 
-              {((showsReview && drama.review) || drama.notes) && (
+              {showsReview && drama.review && (
                 <div className="mt-8 grid gap-5">
-                  {showsReview && drama.review && (
-                    <div className="rounded-xl border border-border/70 bg-background/40 p-5 shadow-xl backdrop-blur-md">
-                      <div className="flex items-start gap-3">
-                        <Quote className="mt-0.5 h-5 w-5 shrink-0 fill-accent text-accent" />
-                        <div className="min-w-0">
-                          <h3 className="mb-2 mt-0.5 text-sm text-accent/80">
-                            Your Review
-                          </h3>
-                          <p className="no-scrollbar max-h-64 overflow-y-auto break-all leading-relaxed text-foreground/90 italic md:max-h-72">
-                            {drama.review}
-                          </p>
-                        </div>
+                  <div className="rounded-xl border border-border/70 bg-background/40 p-5 shadow-xl backdrop-blur-md">
+                    <div className="flex items-start gap-3">
+                      <Quote className="mt-0.5 h-5 w-5 shrink-0 fill-accent text-accent" />
+                      <div className="min-w-0">
+                        <h3 className="mb-2 mt-0.5 text-sm text-accent/80">
+                          Your Review
+                        </h3>
+                        <p className="no-scrollbar max-h-64 overflow-y-auto break-all leading-relaxed text-foreground/90 italic md:max-h-72">
+                          {drama.review}
+                        </p>
                       </div>
                     </div>
-                  )}
-
-                  {drama.notes && (
-                    <article className="rounded-3xl border border-border bg-background/70 p-6 shadow-xl">
-                      <p className="mb-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
-                        Notes
-                      </p>
-
-                      <p className="leading-8 text-foreground/90">
-                        {drama.notes}
-                      </p>
-                    </article>
-                  )}
+                  </div>
                 </div>
               )}
             </div>
