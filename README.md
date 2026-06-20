@@ -1,6 +1,6 @@
 # Drama Diary
 
-Drama Diary is a responsive K-drama journal built with React and TypeScript. It lets users organize a personal drama collection, track viewing progress and status, and record ratings, reviews, notes, and other details.
+Drama Diary is a responsive K-drama journal built with React and TypeScript. It lets users organize a personal drama collection, track viewing progress and status, and record ratings, reviews, and other details.
 
 This repository currently contains the frontend application. Data and demo accounts are stored in the browser with `localStorage`; an ASP.NET Core Web API backend is planned as the next development phase.
 

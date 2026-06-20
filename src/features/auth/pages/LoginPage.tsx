@@ -77,7 +77,7 @@ function LoginPage() {
               </h1>
 
               <p className="mt-5 max-w-sm text-sm leading-7 text-muted-foreground">
-                Continue tracking episodes, ratings, notes, and all the stories
+                Continue tracking episodes, ratings, reviews, and all the stories
                 waiting on your list.
               </p>
             </div>
@@ -118,7 +118,7 @@ function LoginPage() {
                 Welcome back to your drama shelf.
               </h1>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                Continue tracking episodes, ratings, notes, and all the stories
+                Continue tracking episodes, ratings, reviews, and all the stories
                 waiting on your list.
               </p>
             </div>
