@@ -480,7 +480,9 @@ function DramaForm({ initialDrama }: DramaFormProps) {
             <div
               className="flex h-11 items-center gap-1.5"
               role="group"
-              aria-label="Rating"
+              aria-label={
+                rating ? `Rating, current rating ${rating} out of 5` : "Rating"
+              }
               aria-invalid={Boolean(validationErrors.rating)}
               aria-describedby={
                 validationErrors.rating ? ratingErrorId : undefined
@@ -506,6 +508,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                     }}
                     className="text-muted-foreground transition-colors hover:text-accent"
                     aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                    aria-pressed={Number(rating) === star}
                   >
                     <HugeiconsIcon
                       icon={StarIcon}
@@ -552,10 +555,10 @@ function DramaForm({ initialDrama }: DramaFormProps) {
         )}
 
         {/* genres */}
-        <div className="flex min-w-0 flex-col gap-1">
-          <label className="block text-sm font-medium text-foreground">
+        <fieldset className="flex min-w-0 flex-col gap-1">
+          <legend className="block text-sm font-medium text-foreground">
             Genres
-          </label>
+          </legend>
 
           <div className="flex flex-wrap gap-2">
             {genreOptions.map((genre) => {
@@ -566,6 +569,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                   key={genre}
                   type="button"
                   onClick={() => toggleGenre(genre)}
+                  aria-pressed={isSelected}
                   className={`rounded-full px-3 py-1.5 text-sm transition-all duration-200 ${
                     isSelected
                       ? "bg-accent text-accent-foreground"
@@ -577,7 +581,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
               );
             })}
           </div>
-        </div>
+        </fieldset>
 
         {/* posterUrl */}
         <div className="flex min-w-0 flex-col gap-1">

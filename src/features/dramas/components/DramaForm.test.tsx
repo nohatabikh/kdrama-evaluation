@@ -28,6 +28,42 @@ function renderDramaForm(initialDrama?: Drama) {
 }
 
 describe("DramaForm validation", () => {
+  it("exposes genre and rating selection state", () => {
+    const initialDrama: Drama = {
+      id: "drama-1",
+      title: "Signal",
+      genres: ["Thriller"],
+      status: "completed",
+      totalEpisodes: 16,
+      currentEpisode: 16,
+      rating: 3,
+      createdAt: "2026-06-12T00:00:00.000Z",
+    };
+
+    renderDramaForm(initialDrama);
+
+    expect(screen.getByRole("group", { name: "Genres" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Thriller" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Romance" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(
+      screen.getByRole("group", { name: /current rating 3 out of 5/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /rate 3 stars/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: /rate 4 stars/i })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+  });
+
   it("shows an inline title error instead of using alert", async () => {
     const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
     const user = userEvent.setup();
