@@ -30,6 +30,10 @@ function DramaFilters({
   return (
     <section className="space-y-4">
       <div className="relative">
+        <label htmlFor="drama-search" className="sr-only">
+          Search dramas
+        </label>
+
         <HugeiconsIcon
           icon={Search01Icon}
           size={18}
@@ -39,15 +43,19 @@ function DramaFilters({
         />
 
         <Input
+          id="drama-search"
           type="text"
           placeholder="Search your dramas..."
           value={searchTerm}
-          aria-label="Search dramas"
           onChange={(e) => onSearchTermChange(e.target.value)}
           className="pl-11 pr-10 h-12 bg-card/50 border-border/50 focus:border-accent/50 focus:ring-accent/20 placeholder:text-muted-foreground/60"
         />
       </div>
-      <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+      <div
+        className="flex flex-wrap justify-center gap-2 sm:justify-start"
+        role="group"
+        aria-label="Filter dramas by status"
+      >
         {statusFilterOptions.map((option) => {
           const isActive = statusFilter === option.value;
 
@@ -56,6 +64,7 @@ function DramaFilters({
               key={option.value}
               type="button"
               onClick={() => onStatusChange(option.value)}
+              aria-pressed={isActive}
               className={`min-h-9 rounded-md border px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? "border-accent bg-accent text-accent-foreground shadow-sm shadow-accent/20"

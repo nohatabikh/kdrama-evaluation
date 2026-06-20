@@ -55,7 +55,7 @@ function Navbar() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-5 sm:px-0 ">
         <NavLink
           to="/"
-          className="group flex min-w-0 items-center gap-2"
+          className="group flex min-w-0 items-center gap-0"
           aria-label="Drama Diary home"
         >
           <img
@@ -65,7 +65,7 @@ function Navbar() {
             aria-hidden="true"
           />
 
-          <span className="relative hidden min-w-0 sm:-ml-5 sm:block">
+          <span className="relative hidden min-w-0 sm:block">
             <span className="block truncate font-serif text-xl font-semibold leading-tight tracking-tight text-foreground">
               Drama Diary
             </span>

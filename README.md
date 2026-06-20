@@ -1,6 +1,6 @@
 # Drama Diary
 
-Drama Diary is a responsive K-drama journal built with React and TypeScript. It lets users organize a personal drama collection, track viewing progress and status, and record ratings, reviews, and other details.
+Drama Diary is a responsive K-drama journal built with React and TypeScript. It lets users organize a personal drama collection, track viewing progress and status, and record ratings, reviews, genres, episode progress, and completion dates.
 
 This repository currently contains the frontend application. Data and demo accounts are stored in the browser with `localStorage`; an ASP.NET Core Web API backend is planned as the next development phase.
 
@@ -119,7 +119,7 @@ At the latest repository review:
 
 - ESLint passed
 - TypeScript validation passed
-- All 54 Vitest tests passed
+- All 65 Vitest tests passed
 
 Run the current checks locally with:
 
@@ -134,9 +134,8 @@ npm run build
 - Connect authentication and drama management to an ASP.NET Core Web API
 - Add database-backed user accounts and drama entries
 - Replace mock authentication with secure server-managed authentication
-- Add loading, error, and request status handling for asynchronous APIs
+- Add API request loading, error, and retry states when backend integration begins
 - Add route and component integration tests
-- Improve accessibility and inline form validation
 - Add route-level code splitting and optimize image assets
 - Add richer sorting, filtering, and journal fields
 - Add continuous integration for linting, tests, and production builds
@@ -153,6 +152,6 @@ Screenshots will be added here for:
 
 ## Backend Roadmap
 
-An ASP.NET Core Web API is planned and in progress. The backend will provide the long-term boundary for authentication, authorization, validation, user-specific drama data, and database persistence.
+An ASP.NET Core Web API is planned as future work. The backend will provide the long-term boundary for authentication, authorization, validation, user-specific drama data, and database persistence.
 
 Until that integration is complete, Drama Diary should be treated as a frontend portfolio demo. Accounts, sessions, and journal data remain local to the current browser and device.

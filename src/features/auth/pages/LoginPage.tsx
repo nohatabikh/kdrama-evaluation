@@ -54,14 +54,14 @@ function LoginPage() {
       <div className="relative grid min-h-155 lg:grid-cols-[0.95fr_1.05fr]">
         <aside className="hidden border-r border-border/50 bg-background/35 p-10 lg:flex lg:flex-col lg:justify-between">
           <div>
-            <Link to="/" className="inline-flex items-center gap-2 -ml-4">
+            <Link to="/" className="inline-flex items-center gap-0 -ml-4">
               <img
                 src="/assets/cherry-blossom.svg"
                 alt=""
                 className="relative z-10 size-12 shrink-0"
                 aria-hidden="true"
               />
-              <span className="-ml-6 font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
+              <span className="font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
                 Drama Diary
               </span>
             </Link>
@@ -97,14 +97,14 @@ function LoginPage() {
         <div className="flex items-center justify-center px-7 py-12 sm:px-8 lg:px-12">
           <div className="w-full max-w-md">
             <div className="mb-8 lg:hidden">
-              <Link to="/" className="mb-8 inline-flex items-center gap-2">
+              <Link to="/" className="mb-8 inline-flex items-center gap-0">
                 <img
                   src="/assets/cherry-blossom.svg"
                   alt=""
                   className="relative z-10 size-11 shrink-0"
                   aria-hidden="true"
                 />
-                <span className="-ml-6 font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
+                <span className="font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
                   Drama Diary
                 </span>
               </Link>

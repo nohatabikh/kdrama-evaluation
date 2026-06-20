@@ -47,6 +47,13 @@ type DramaFormProps = {
   initialDrama?: Drama;
 };
 
+type ValidationErrors = {
+  title?: string;
+  rating?: string;
+  totalEpisodes?: string;
+  currentEpisode?: string;
+};
+
 function createDramaId() {
   if (crypto.randomUUID) {
     return crypto.randomUUID();
@@ -83,6 +90,9 @@ function DramaForm({ initialDrama }: DramaFormProps) {
   const [currentEpisode, setCurrentEpisode] = useState(
     initialDrama?.currentEpisode ? String(initialDrama.currentEpisode) : "",
   );
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
+    {},
+  );
 
   const showRatingField = status === "completed" || status === "dropped";
   const showFinishedAtField = status === "completed";
@@ -98,6 +108,25 @@ function DramaForm({ initialDrama }: DramaFormProps) {
 
   const currentEpisodeLabel =
     status === "dropped" ? "Stopped At Episode" : "Current Episode";
+
+  const hasValidationErrors = Object.keys(validationErrors).length > 0;
+  const errorSummaryId = "drama-form-error-summary";
+  const titleErrorId = "title-error";
+  const ratingErrorId = "rating-error";
+  const totalEpisodesErrorId = "totalEpisodes-error";
+  const currentEpisodeErrorId = "currentEpisode-error";
+
+  const clearFieldError = (field: keyof ValidationErrors) => {
+    setValidationErrors((errors) => {
+      if (!errors[field]) {
+        return errors;
+      }
+
+      const nextErrors = { ...errors };
+      delete nextErrors[field];
+      return nextErrors;
+    });
+  };
 
   const selectedGenres = genresInput
     .split(",")
@@ -118,11 +147,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
     event.preventDefault();
 
     const trimmedTitle = title.trim();
-
-    if (!trimmedTitle) {
-      alert("Drama title is required.");
-      return;
-    }
+    const nextErrors: ValidationErrors = {};
 
     const numericRating =
       showRatingField && rating ? Number(rating) : undefined;
@@ -135,41 +160,41 @@ function DramaForm({ initialDrama }: DramaFormProps) {
       ? Number(currentEpisode)
       : undefined;
 
+    if (!trimmedTitle) {
+      nextErrors.title = "Drama title is required.";
+    }
+
     if (numericRating !== undefined && !Number.isFinite(numericRating)) {
-      alert("Rating must be a valid number.");
-      return;
+      nextErrors.rating = "Rating must be a valid number.";
     }
 
     if (
       numericTotalEpisodes !== undefined &&
       !Number.isFinite(numericTotalEpisodes)
     ) {
-      alert("Total episodes must be a valid number.");
-      return;
+      nextErrors.totalEpisodes = "Total episodes must be a valid number.";
     }
 
     if (
       numericCurrentEpisode !== undefined &&
       !Number.isFinite(numericCurrentEpisode)
     ) {
-      alert("Current episode must be a valid number.");
-      return;
+      nextErrors.currentEpisode = "Current episode must be a valid number.";
     }
 
     if (
       numericRating !== undefined &&
       (numericRating < 1 || numericRating > 5)
     ) {
-      alert("Rating must be between 1 and 5.");
-      return;
+      nextErrors.rating = "Rating must be between 1 and 5.";
     }
 
     if (
       numericTotalEpisodes !== undefined &&
       (!Number.isInteger(numericTotalEpisodes) || numericTotalEpisodes < 1)
     ) {
-      alert("Total episodes must be a whole number of at least 1.");
-      return;
+      nextErrors.totalEpisodes =
+        "Total episodes must be a whole number of at least 1.";
     }
 
     if (
@@ -177,8 +202,8 @@ function DramaForm({ initialDrama }: DramaFormProps) {
       numericCurrentEpisode !== undefined &&
       (!Number.isInteger(numericCurrentEpisode) || numericCurrentEpisode < 1)
     ) {
-      alert("Current episode must be a whole number of at least 1.");
-      return;
+      nextErrors.currentEpisode =
+        "Current episode must be a whole number of at least 1.";
     }
 
     if (
@@ -187,7 +212,13 @@ function DramaForm({ initialDrama }: DramaFormProps) {
       numericCurrentEpisode !== undefined &&
       numericCurrentEpisode > numericTotalEpisodes
     ) {
-      alert("Current episode cannot be greater than total episodes.");
+      nextErrors.currentEpisode =
+        "Current episode cannot be greater than total episodes.";
+    }
+
+    setValidationErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
       return;
     }
 
@@ -245,9 +276,22 @@ function DramaForm({ initialDrama }: DramaFormProps) {
             id="title"
             type="text"
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => {
+              setTitle(event.target.value);
+              clearFieldError("title");
+            }}
+            aria-invalid={Boolean(validationErrors.title)}
+            aria-describedby={
+              validationErrors.title ? titleErrorId : undefined
+            }
             className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
           />
+
+          {validationErrors.title && (
+            <p id={titleErrorId} className="text-sm text-destructive">
+              {validationErrors.title}
+            </p>
+          )}
         </div>
 
         {/* status / episodes / date */}
@@ -307,10 +351,28 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 min="1"
                 step="1"
                 value={totalEpisodes}
-                onChange={(event) => setTotalEpisodes(event.target.value)}
+                onChange={(event) => {
+                  setTotalEpisodes(event.target.value);
+                  clearFieldError("totalEpisodes");
+                }}
                 placeholder="16"
+                aria-invalid={Boolean(validationErrors.totalEpisodes)}
+                aria-describedby={
+                  validationErrors.totalEpisodes
+                    ? totalEpisodesErrorId
+                    : undefined
+                }
                 className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
               />
+
+              {validationErrors.totalEpisodes && (
+                <p
+                  id={totalEpisodesErrorId}
+                  className="text-sm text-destructive"
+                >
+                  {validationErrors.totalEpisodes}
+                </p>
+              )}
             </div>
           )}
 
@@ -330,14 +392,32 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 min="1"
                 step="1"
                 value={currentEpisode}
-                onChange={(event) => setCurrentEpisode(event.target.value)}
+                onChange={(event) => {
+                  setCurrentEpisode(event.target.value);
+                  clearFieldError("currentEpisode");
+                }}
                 placeholder={
                   status === "dropped"
                     ? "Episode you stopped at"
                     : "Episode you are on"
                 }
+                aria-invalid={Boolean(validationErrors.currentEpisode)}
+                aria-describedby={
+                  validationErrors.currentEpisode
+                    ? currentEpisodeErrorId
+                    : undefined
+                }
                 className="h-11 max-w-full rounded-md border-border/50 bg-background/50 text-foreground placeholder:text-muted-foreground/60 focus-visible:border-accent/60 focus-visible:ring-accent/20"
               />
+
+              {validationErrors.currentEpisode && (
+                <p
+                  id={currentEpisodeErrorId}
+                  className="text-sm text-destructive"
+                >
+                  {validationErrors.currentEpisode}
+                </p>
+              )}
             </div>
           )}
 
@@ -397,7 +477,17 @@ function DramaForm({ initialDrama }: DramaFormProps) {
               Rating
             </label>
 
-            <div className="flex h-11 items-center gap-1.5">
+            <div
+              className="flex h-11 items-center gap-1.5"
+              role="group"
+              aria-label={
+                rating ? `Rating, current rating ${rating} out of 5` : "Rating"
+              }
+              aria-invalid={Boolean(validationErrors.rating)}
+              aria-describedby={
+                validationErrors.rating ? ratingErrorId : undefined
+              }
+            >
               {[1, 2, 3, 4, 5].map((star) => {
                 const isSelected = Number(rating) >= star;
 
@@ -406,6 +496,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                     key={star}
                     type="button"
                     onClick={() => {
+                      clearFieldError("rating");
                       const currentRating = Number(rating);
 
                       if (currentRating === star) {
@@ -417,6 +508,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                     }}
                     className="text-muted-foreground transition-colors hover:text-accent"
                     aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                    aria-pressed={Number(rating) === star}
                   >
                     <HugeiconsIcon
                       icon={StarIcon}
@@ -429,6 +521,12 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                 );
               })}
             </div>
+
+            {validationErrors.rating && (
+              <p id={ratingErrorId} className="text-sm text-destructive">
+                {validationErrors.rating}
+              </p>
+            )}
           </div>
         )}
 
@@ -457,10 +555,10 @@ function DramaForm({ initialDrama }: DramaFormProps) {
         )}
 
         {/* genres */}
-        <div className="flex min-w-0 flex-col gap-1">
-          <label className="block text-sm font-medium text-foreground">
+        <fieldset className="flex min-w-0 flex-col gap-1">
+          <legend className="block text-sm font-medium text-foreground">
             Genres
-          </label>
+          </legend>
 
           <div className="flex flex-wrap gap-2">
             {genreOptions.map((genre) => {
@@ -471,6 +569,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                   key={genre}
                   type="button"
                   onClick={() => toggleGenre(genre)}
+                  aria-pressed={isSelected}
                   className={`rounded-full px-3 py-1.5 text-sm transition-all duration-200 ${
                     isSelected
                       ? "bg-accent text-accent-foreground"
@@ -482,7 +581,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
               );
             })}
           </div>
-        </div>
+        </fieldset>
 
         {/* posterUrl */}
         <div className="flex min-w-0 flex-col gap-1">
@@ -516,24 +615,39 @@ function DramaForm({ initialDrama }: DramaFormProps) {
           </div>
         </div>
 
-        <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              navigate(initialDrama ? `/dramas/${initialDrama.id}` : "/");
-            }}
-            className="h-11 rounded-md border-border/70 bg-background/30 text-foreground transition-colors hover:border-accent/60 hover:bg-accent/10 hover:text-foreground sm:min-w-28"
-          >
-            Cancel
-          </Button>
+        <div className="mt-2 grid gap-3">
+          {hasValidationErrors && (
+            <p
+              id={errorSummaryId}
+              role="alert"
+              className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            >
+              Please fix the highlighted fields before saving this drama.
+            </p>
+          )}
 
-          <Button
-            type="submit"
-            className="h-11 rounded-md bg-accent text-accent-foreground transition-colors hover:bg-accent/90 sm:min-w-32"
-          >
-            {initialDrama ? "Update Drama" : "Add Drama"}
-          </Button>
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                navigate(initialDrama ? `/dramas/${initialDrama.id}` : "/");
+              }}
+              className="h-11 rounded-md border-border/70 bg-background/30 text-foreground transition-colors hover:border-accent/60 hover:bg-accent/10 hover:text-foreground sm:min-w-28"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              aria-describedby={
+                hasValidationErrors ? errorSummaryId : undefined
+              }
+              className="h-11 rounded-md bg-accent text-accent-foreground transition-colors hover:bg-accent/90 sm:min-w-32"
+            >
+              {initialDrama ? "Update Drama" : "Add Drama"}
+            </Button>
+          </div>
         </div>
       </div>
     </form>

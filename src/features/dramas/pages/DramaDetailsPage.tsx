@@ -80,6 +80,9 @@ function DramaDetailsPage() {
     drama.status === "completed" || drama.status === "dropped";
 
   const showsFinishedDate = drama.status === "completed";
+  const finishedDateLabel = showsFinishedDate
+    ? (drama.finishedAt ?? "Date not provided")
+    : "Not finished";
 
   return (
     <div className="relative min-h-screen overflow-hidden px-5 pb-8 pt-16 text-foreground">
@@ -220,9 +223,7 @@ function DramaDetailsPage() {
                     Finished
                   </p>
                   <p className="text-lg font-medium text-accent">
-                    {showsFinishedDate && drama.finishedAt
-                      ? drama.finishedAt
-                      : "Not finished"}
+                    {finishedDateLabel}
                   </p>
                 </div>
               </div>
