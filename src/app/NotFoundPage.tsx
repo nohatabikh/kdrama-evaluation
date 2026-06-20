@@ -1,9 +1,15 @@
-import { Home } from "lucide-react";
+import { Home, LogIn } from "lucide-react";
 
 import RecoveryPanel from "../components/layout/RecoveryPanel";
 import PetalOverlay from "../components/visual/PetalOverlay";
+import { useAppSelector } from "../hooks/useAppSelector";
 
 function NotFoundPage() {
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const actionLabel = isAuthenticated ? "Back to collection" : "Back to login";
+  const actionTo = isAuthenticated ? "/" : "/login";
+  const ActionIcon = isAuthenticated ? Home : LogIn;
+
   return (
     <>
       <PetalOverlay />
@@ -17,9 +23,9 @@ function NotFoundPage() {
           eyebrow="404"
           title="This page is not in your diary."
           description="The link may be old, mistyped, or no longer part of Drama Diary."
-          actionLabel="Back to collection"
-          actionTo="/"
-          ActionIcon={Home}
+          actionLabel={actionLabel}
+          actionTo={actionTo}
+          ActionIcon={ActionIcon}
         />
       </main>
     </>
