@@ -1,4 +1,7 @@
 import { Link, useParams } from "react-router-dom";
+import { Home } from "lucide-react";
+
+import RecoveryPanel from "../../../components/layout/RecoveryPanel";
 import { useAppSelector } from "../../../hooks/useAppSelector";
 import DramaForm from "../components/DramaForm";
 
@@ -30,21 +33,19 @@ function EditDramaPage() {
 
   if (!drama) {
     return (
-      <div className="min-h-screen bg-background px-5 py-10 text-foreground">
-        <div className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-8 text-center shadow-2xl">
-          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            Not Found
-          </p>
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10 text-foreground">
+        <div className="pointer-events-none absolute -left-30 top-20 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-35 top-1/3 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl" />
 
-          <h1 className="mb-4 text-3xl font-semibold">Drama not found</h1>
-
-          <Link
-            to="/"
-            className="inline-flex rounded-full border border-border px-5 py-2 text-sm font-medium text-foreground transition hover:border-accent hover:bg-accent/10"
-          >
-            Back to collection
-          </Link>
-        </div>
+        <RecoveryPanel
+          eyebrow="Not Found"
+          title="This drama is not in your diary."
+          description="It may have been deleted, belong to another account, or the link may be old."
+          actionLabel="Back to collection"
+          actionTo="/"
+          ActionIcon={Home}
+        />
       </div>
     );
   }
