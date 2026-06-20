@@ -237,7 +237,7 @@ function DramaDetailsPage() {
                         <h3 className="mb-2 mt-0.5 text-sm text-accent/80">
                           Your Review
                         </h3>
-                        <p className="no-scrollbar max-h-64 overflow-y-auto break-all leading-relaxed text-foreground/90 italic md:max-h-72">
+                        <p className="no-scrollbar max-h-64 overflow-y-auto break-words whitespace-pre-line leading-relaxed text-foreground/90 italic md:max-h-72">
                           {drama.review}
                         </p>
                       </div>

@@ -58,7 +58,7 @@ function renderWithAuth(children: ReactNode, isAuthenticated: boolean) {
 }
 
 describe("router fallbacks", () => {
-  it("shows one collection action on the 404 page", () => {
+  it("points logged-out users from the 404 page to login", () => {
     renderWithAuth(
       <MemoryRouter initialEntries={["/missing-page"]}>
         <NotFoundPage />
@@ -69,6 +69,21 @@ describe("router fallbacks", () => {
     expect(
       screen.getByRole("heading", { name: /this page is not in your diary/i }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /back to login/i })).toHaveAttribute(
+      "href",
+      "/login",
+    );
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+  });
+
+  it("points authenticated users from the 404 page to the collection", () => {
+    renderWithAuth(
+      <MemoryRouter initialEntries={["/missing-page"]}>
+        <NotFoundPage />
+      </MemoryRouter>,
+      true,
+    );
+
     expect(
       screen.getByRole("link", { name: /back to collection/i }),
     ).toHaveAttribute("href", "/");

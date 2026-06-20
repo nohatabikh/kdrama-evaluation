@@ -119,7 +119,7 @@ At the latest repository review:
 
 - ESLint passed
 - TypeScript validation passed
-- All 65 Vitest tests passed
+- All 66 Vitest tests passed
 
 Run the current checks locally with:
 
@@ -142,13 +142,17 @@ npm run build
 
 ## Screenshots
 
-Screenshots will be added here for:
+### Collection Dashboard
 
-- Login and signup
-- Drama collection dashboard
-- Add and edit drama forms
-- Drama details
-- Mobile layout
+![Collection dashboard](docs/screenshots/desktop-collection.png)
+
+### Drama Details
+
+![Drama details](docs/screenshots/desktop-details.png)
+
+### Mobile Layout
+
+![Mobile collection](docs/screenshots/mobile-collection.png)
 
 ## Backend Roadmap
 
