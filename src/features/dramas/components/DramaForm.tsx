@@ -439,7 +439,7 @@ function DramaForm({ initialDrama }: DramaFormProps) {
               htmlFor="review"
               className="block text-sm font-medium text-foreground"
             >
-              {status === "dropped" ? "Reason / Notes" : "Review"}
+              {status === "dropped" ? "Reason for Dropping" : "Review"}
             </label>
 
             <Textarea
