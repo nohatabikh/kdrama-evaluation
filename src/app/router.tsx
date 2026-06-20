@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "../components/layout/MainLayout";
 import AuthLayout from "../components/layout/AuthLayout";
+import NotFoundPage from "./NotFoundPage";
+import RouteErrorBoundary from "./RouteErrorBoundary";
 
 import GuestRoute from "../features/auth/components/GuestRoute";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
@@ -15,44 +17,53 @@ import EditDramaPage from "../features/dramas/pages/EditDramaPage";
 
 export const router = createBrowserRouter([
   {
-    element: (
-      <GuestRoute>
-        <AuthLayout />
-      </GuestRoute>
-    ),
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
-        path: "/login",
-        element: <LoginPage />,
+        element: (
+          <GuestRoute>
+            <AuthLayout />
+          </GuestRoute>
+        ),
+        children: [
+          {
+            path: "/login",
+            element: <LoginPage />,
+          },
+          {
+            path: "/signup",
+            element: <SignupPage />,
+          },
+        ],
       },
       {
-        path: "/signup",
-        element: <SignupPage />,
+        element: (
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            path: "/",
+            element: <DramaListPage />,
+          },
+          {
+            path: "/dramas/add",
+            element: <AddDramaPage />,
+          },
+          {
+            path: "/dramas/:id",
+            element: <DramaDetailsPage />,
+          },
+          {
+            path: "/dramas/:id/edit",
+            element: <EditDramaPage />,
+          },
+        ],
       },
-    ],
-  },
-  {
-    element: (
-      <ProtectedRoute>
-        <MainLayout />
-      </ProtectedRoute>
-    ),
-    children: [
       {
-        path: "/",
-        element: <DramaListPage />,
-      },
-      {
-        path: "/dramas/add",
-        element: <AddDramaPage />,
-      },
-      {
-        path: "/dramas/:id",
-        element: <DramaDetailsPage />,
-      },
-      {
-        path: "/dramas/:id/edit",
-        element: <EditDramaPage />,
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },
