@@ -199,6 +199,160 @@
   font-weight: 600;
 }
 
+.kdrama-datepicker__header {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.kdrama-datepicker__header-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.kdrama-datepicker__nav-button,
+.kdrama-datepicker__current-month-button {
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  outline: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.kdrama-datepicker__nav-button {
+  min-height: 2rem;
+  color: var(--muted-foreground);
+  font-weight: 700;
+}
+
+.kdrama-datepicker__current-month-button {
+  min-width: 0;
+  min-height: 2rem;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+}
+
+.kdrama-datepicker__nav-button:not(:disabled):hover,
+.kdrama-datepicker__current-month-button:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--foreground);
+}
+
+.kdrama-datepicker__nav-button:focus-visible,
+.kdrama-datepicker__current-month-button:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.kdrama-datepicker__nav-button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.kdrama-datepicker__navigation-panel {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.kdrama-datepicker__mobile-navigation {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.kdrama-datepicker__desktop-navigation {
+  display: none;
+}
+
+.kdrama-datepicker__month-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.kdrama-datepicker__year-grid {
+  display: grid;
+  max-height: 7.2rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.35rem;
+  overflow-y: auto;
+  padding-right: 0.1rem;
+}
+
+.kdrama-datepicker__choice-button {
+  min-height: 2rem;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--background) 58%, var(--card));
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.8rem;
+  outline: none;
+  padding: 0.25rem 0.35rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.kdrama-datepicker__choice-button:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.kdrama-datepicker__choice-button:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.kdrama-datepicker__choice-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.kdrama-datepicker__select {
+  min-height: 2rem;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--background) 58%, var(--card));
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.8rem;
+  outline: none;
+  padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+}
+
+.kdrama-datepicker__select:focus {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.kdrama-datepicker__select option {
+  background: var(--card);
+  color: var(--foreground);
+}
+
+@media (min-width: 641px) {
+  .kdrama-datepicker__mobile-navigation {
+    display: none;
+  }
+
+  .kdrama-datepicker__desktop-navigation {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(5rem, 0.55fr);
+    gap: 0.5rem;
+  }
+}
+
 .react-datepicker__day-name {
   color: var(--muted-foreground);
   font-size: 0.75rem;

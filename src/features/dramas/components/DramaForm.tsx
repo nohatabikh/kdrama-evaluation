@@ -43,6 +43,24 @@ const genreOptions = [
   "Sci-Fi",
 ] as const;
 
+const earliestFinishedAtDate = new Date(1990, 0, 1);
+const earliestFinishedAtYear = earliestFinishedAtDate.getFullYear();
+
+const monthOptions = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
 type DramaFormProps = {
   initialDrama?: Drama;
 };
@@ -62,9 +80,19 @@ function createDramaId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
+function formatDatepickerHeader(date: Date) {
+  return `${monthOptions[date.getMonth()]} ${date.getFullYear()}`;
+}
+
 function DramaForm({ initialDrama }: DramaFormProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const maxFinishedAtDate = new Date();
+  const maxFinishedAtYear = maxFinishedAtDate.getFullYear();
+  const finishedAtYearOptions = Array.from(
+    { length: maxFinishedAtYear - earliestFinishedAtYear + 1 },
+    (_, index) => earliestFinishedAtYear + index,
+  );
 
   const [title, setTitle] = useState(initialDrama?.title ?? "");
   const [genresInput, setGenresInput] = useState(
@@ -93,6 +121,8 @@ function DramaForm({ initialDrama }: DramaFormProps) {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {},
   );
+  const [isFinishedAtNavigationOpen, setIsFinishedAtNavigationOpen] =
+    useState(false);
 
   const showRatingField = status === "completed" || status === "dropped";
   const showFinishedAtField = status === "completed";
@@ -460,9 +490,146 @@ function DramaForm({ initialDrama }: DramaFormProps) {
                     : "kdrama-datepicker-day";
                 }}
                 calendarClassName="kdrama-datepicker"
+                minDate={earliestFinishedAtDate}
+                maxDate={maxFinishedAtDate}
+                renderCustomHeader={({
+                  date,
+                  changeYear,
+                  changeMonth,
+                  decreaseMonth,
+                  increaseMonth,
+                  prevMonthButtonDisabled,
+                  nextMonthButtonDisabled,
+                }) => {
+                  const displayedYear = date.getFullYear();
+
+                  return (
+                    <div className="kdrama-datepicker__header">
+                      <div className="kdrama-datepicker__header-row">
+                        <button
+                          type="button"
+                          className="kdrama-datepicker__nav-button"
+                          onClick={decreaseMonth}
+                          disabled={prevMonthButtonDisabled}
+                          aria-label="Previous month"
+                        >
+                          {"<"}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="kdrama-datepicker__current-month-button"
+                          onClick={() =>
+                            setIsFinishedAtNavigationOpen((isOpen) => !isOpen)
+                          }
+                          aria-expanded={isFinishedAtNavigationOpen}
+                          aria-label="Choose month and year"
+                        >
+                          {formatDatepickerHeader(date)}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="kdrama-datepicker__nav-button"
+                          onClick={increaseMonth}
+                          disabled={nextMonthButtonDisabled}
+                          aria-label="Next month"
+                        >
+                          {">"}
+                        </button>
+                      </div>
+
+                      {isFinishedAtNavigationOpen ? (
+                        <div className="kdrama-datepicker__navigation-panel">
+                          <div
+                            className="kdrama-datepicker__mobile-navigation"
+                          >
+                            <div
+                              className="kdrama-datepicker__month-grid"
+                              role="group"
+                              aria-label="Choose month"
+                            >
+                              {monthOptions.map((month, monthIndex) => (
+                                <button
+                                  key={month}
+                                  type="button"
+                                  className="kdrama-datepicker__choice-button"
+                                  aria-pressed={date.getMonth() === monthIndex}
+                                  onClick={() => changeMonth(monthIndex)}
+                                >
+                                  {month.slice(0, 3)}
+                                </button>
+                              ))}
+                            </div>
+
+                            <div
+                              className="kdrama-datepicker__year-grid no-scrollbar"
+                              role="group"
+                              aria-label="Choose year"
+                            >
+                              {finishedAtYearOptions.map((year) => (
+                                <button
+                                  key={year}
+                                  type="button"
+                                  className="kdrama-datepicker__choice-button"
+                                  aria-pressed={displayedYear === year}
+                                  onClick={() => {
+                                    changeYear(year);
+                                    changeMonth(date.getMonth());
+                                  }}
+                                >
+                                  {year}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="kdrama-datepicker__desktop-navigation">
+                            <select
+                            role="group"
+                            aria-label="Choose month"
+                              className="kdrama-datepicker__select"
+                              value={date.getMonth()}
+                              onChange={(event) => {
+                                changeMonth(Number(event.target.value));
+                              }}
+                          >
+                              {monthOptions.map((month, monthIndex) => (
+                                <option key={month} value={monthIndex}>
+                                  {month}
+                                </option>
+                              ))}
+                            </select>
+
+                            <select
+                              aria-label="Choose year"
+                              className="kdrama-datepicker__select"
+                              value={displayedYear}
+                              onChange={(event) => {
+                                const nextYear = Number(event.target.value);
+
+                                changeYear(nextYear);
+                                changeMonth(date.getMonth());
+                              }}
+                            >
+                              {finishedAtYearOptions.map((year) => (
+                                <option key={year} value={year}>
+                                  {year}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                }}
                 dateFormat="yyyy-MM-dd"
                 placeholderText="Pick a date"
                 isClearable
+                onCalendarOpen={() => setIsFinishedAtNavigationOpen(false)}
+                onCalendarClose={() => setIsFinishedAtNavigationOpen(false)}
+                popperPlacement="bottom-start"
                 wrapperClassName="w-full"
                 className="h-11 w-full max-w-full rounded-md border border-border/50 bg-background/50 px-3 py-1 text-sm text-foreground outline-none placeholder:text-muted-foreground/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
               />
